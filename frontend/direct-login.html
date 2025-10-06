@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Direct Login - Smart Mentor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #495057;
+        }
+        
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        
+        .btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            margin: 10px 0;
+            transition: background 0.3s;
+        }
+        
+        .btn:hover {
+            background: #0056b3;
+        }
+        
+        .btn.success {
+            background: #28a745;
+        }
+        
+        .btn.secondary {
+            background: #6c757d;
+        }
+        
+        .result {
+            margin: 15px 0;
+            padding: 15px;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+        
+        .result.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .result.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .result.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        .quick-login {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+        
+        .quick-login button {
+            flex: 1;
+            min-width: 120px;
+        }
+        
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+        
+        .credentials {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+        
+        .credentials h4 {
+            margin-bottom: 10px;
+            color: #495057;
+        }
+        
+        .credentials p {
+            margin: 5px 0;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔐 Direct Login</h1>
+            <p>Bypass network issues with direct authentication</p>
+        </div>
+        
+        <div class="credentials">
+            <h4>📋 Available Accounts:</h4>
+            <p><strong>Admin:</strong> admin@smartmentor.com / admin123</p>
+            <p><strong>Mentor:</strong> mentor@smartmentor.com / mentor123</p>
+            <p><strong>Student:</strong> student@smartmentor.com / student123</p>
+        </div>
+        
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" required value="admin@smartmentor.com">
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required value="admin123">
+            </div>
+            
+            <button type="submit" class="btn">Login</button>
+        </form>
+        
+        <div class="quick-login">
+            <button class="btn secondary" onclick="setCredentials('admin@smartmentor.com', 'admin123')">Admin</button>
+            <button class="btn secondary" onclick="setCredentials('mentor@smartmentor.com', 'mentor123')">Mentor</button>
+            <button class="btn secondary" onclick="setCredentials('student@smartmentor.com', 'student123')">Student</button>
+        </div>
+        
+        <div id="results"></div>
+        
+        <div style="text-align: center; margin-top: 30px;">
+            <button class="btn success" onclick="testConnection()">Test Connection</button>
+            <button class="btn" onclick="goToDashboard()" id="dashboardBtn" style="display: none;">Go to Dashboard</button>
+        </div>
+    </div>
+
+    <script>
+        // Use direct IP to avoid DNS issues
+        const API_BASE_URL = 'http://127.0.0.1:3001/api';
+        let currentUser = null;
+        
+        function addResult(message, type = 'info') {
+            const container = document.getElementById('results');
+            const div = document.createElement('div');
+            div.className = `result ${type}`;
+            div.innerHTML = message;
+            container.appendChild(div);
+        }
+        
+        function clearResults() {
+            document.getElementById('results').innerHTML = '';
+        }
+        
+        function setCredentials(email, password) {
+            document.getElementById('email').value = email;
+            document.getElementById('password').value = password;
+        }
+        
+        async function testConnection() {
+            clearResults();
+            addResult('🔍 Testing connection to backend...', 'info');
+            
+            try {
+                // Test with both localhost and 127.0.0.1
+                const urls = [
+                    'http://localhost:3001/api/auth/me',
+                    'http://127.0.0.1:3001/api/auth/me'
+                ];
+                
+                for (const url of urls) {
+                    try {
+                        const response = await fetch(url, {
+                            method: 'GET',
+                            headers: { 'Content-Type': 'application/json' },
+                            mode: 'cors'
+                        });
+                        
+                        if (response.status === 401) {
+                            addResult(`✅ Connection successful to ${url}`, 'success');
+                            return;
+                        }
+                    } catch (error) {
+                        addResult(`❌ Failed to connect to ${url}: ${error.message}`, 'error');
+                    }
+                }
+                
+                addResult('❌ All connection attempts failed', 'error');
+                addResult('💡 Try: 1) Check if backend is running 2) Disable antivirus/firewall temporarily', 'info');
+                
+            } catch (error) {
+                addResult(`❌ Connection test failed: ${error.message}`, 'error');
+            }
+        }
+        
+        async function directLogin(email, password) {
+            clearResults();
+            addResult('🔐 Attempting direct login...', 'info');
+            
+            // Try multiple connection methods
+            const methods = [
+                { url: 'http://localhost:3001/api/auth/login', name: 'localhost' },
+                { url: 'http://127.0.0.1:3001/api/auth/login', name: '127.0.0.1' }
+            ];
+            
+            for (const method of methods) {
+                try {
+                    addResult(`Trying ${method.name}...`, 'info');
+                    
+                    const response = await fetch(method.url, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                        mode: 'cors',
+                        body: JSON.stringify({ email, password })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (response.ok && data.success) {
+                        addResult(`✅ Login successful via ${method.name}!`, 'success');
+                        addResult(`👤 Welcome: ${data.data.user.email}`, 'success');
+                        addResult(`🎯 Role: ${data.data.user.role}`, 'info');
+                        
+                        // Store authentication data
+                        localStorage.setItem('smart_mentor_token', data.data.token);
+                        localStorage.setItem('smart_mentor_user', JSON.stringify(data.data.user));
+                        currentUser = data.data.user;
+                        
+                        // Show dashboard button
+                        document.getElementById('dashboardBtn').style.display = 'block';
+                        
+                        // Redirect based on role
+                        setTimeout(() => {
+                            if (data.data.user.role === 'admin') {
+                                window.location.href = '/admin/';
+                            } else if (data.data.user.role === 'mentor') {
+                                window.location.href = '/admin/';
+                            } else {
+                                window.location.href = '/student/';
+                            }
+                        }, 2000);
+                        
+                        return;
+                    } else {
+                        addResult(`❌ Login failed via ${method.name}: ${data.message}`, 'error');
+                    }
+                } catch (error) {
+                    addResult(`❌ ${method.name} connection failed: ${error.message}`, 'error');
+                }
+            }
+            
+            addResult('❌ All login methods failed. Check server status.', 'error');
+        }
+        
+        function goToDashboard() {
+            if (currentUser) {
+                if (currentUser.role === 'admin' || currentUser.role === 'mentor') {
+                    window.location.href = '/admin/';
+                } else {
+                    window.location.href = '/student/';
+                }
+            } else {
+                window.location.href = '/';
+            }
+        }
+        
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            submitBtn.classList.add('loading');
+            submitBtn.textContent = 'Logging in...';
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            try {
+                await directLogin(email, password);
+            } finally {
+                submitBtn.classList.remove('loading');
+                submitBtn.textContent = 'Login';
+            }
+        });
+        
+        // Auto-test connection on load
+        window.addEventListener('load', () => {
+            setTimeout(testConnection, 1000);
+        });
+    </script>
+</body>
+</html>

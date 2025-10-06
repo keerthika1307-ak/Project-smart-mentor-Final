@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - Smart Mentor</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="modern-dashboard">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Smart Mentor</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-link active">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="profile.html" class="nav-link">
+                    <i class="fas fa-user"></i>
+                    <span>Profile</span>
+                </a>
+                <a href="academics.html" class="nav-link">
+                    <i class="fas fa-book"></i>
+                    <span>Academics</span>
+                </a>
+                <a href="attendance.html" class="nav-link">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>Attendance</span>
+                </a>
+                <a href="blackmarks.html" class="nav-link">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>Blackmarks</span>
+                </a>
+                <a href="ai-feedback.html" class="nav-link">
+                    <i class="fas fa-robot"></i>
+                    <span>AI Feedback</span>
+                </a>
+                <a href="messages.html" class="nav-link">
+                    <i class="fas fa-comments"></i>
+                    <span>Messages</span>
+                </a>
+                <a href="settings.html" class="nav-link">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Top Header -->
+            <header class="top-header">
+                <div class="header-left">
+                    <h1>Student Dashboard</h1>
+                </div>
+                <div class="header-right">
+                    <div class="user-profile">
+                        <span id="user-email">student@email.com</span>
+                        <div class="user-avatar">
+                            <span id="user-initial">S</span>
+                        </div>
+                        <button onclick="logout()" class="logout-btn">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </button>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Dashboard Content -->
+            <div class="dashboard-content-area">
+                <!-- Welcome Section -->
+                <div class="welcome-section">
+                    <h2>Welcome back, <span id="welcome-name">Student</span>!</h2>
+                    <p>Here's an overview of your academic progress and activities.</p>
+                </div>
+                    
+                <!-- Stats Cards -->
+                <div class="stats-container">
+                    <div class="stat-card blue">
+                        <div class="stat-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-number" id="current-cgpa">0.0</div>
+                            <div class="stat-label">Current CGPA</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card green">
+                        <div class="stat-icon">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-number" id="attendance-percentage">0%</div>
+                            <div class="stat-label">Attendance</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card orange">
+                        <div class="stat-icon">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-number" id="total-subjects">0</div>
+                            <div class="stat-label">Total Subjects</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card red">
+                        <div class="stat-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-number" id="blackmarks-count">0</div>
+                            <div class="stat-label">Blackmarks</div>
+                        </div>
+                    </div>
+                </div>
+                    
+                <!-- Action Cards Grid -->
+                <div class="action-cards-grid">
+                    <div class="action-card">
+                        <div class="action-icon blue">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <div class="action-content">
+                            <h3>Academic Performance</h3>
+                            <p>View your subject-wise marks and CGPA calculation.</p>
+                            <a href="academics.html" class="action-btn">
+                                <i class="fas fa-chart-line"></i>
+                                View Academics
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="action-card">
+                        <div class="action-icon green">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div class="action-content">
+                            <h3>Attendance Record</h3>
+                            <p>Track your monthly attendance and overall percentage.</p>
+                            <a href="attendance.html" class="action-btn">
+                                <i class="fas fa-calendar-alt"></i>
+                                View Attendance
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="action-card">
+                        <div class="action-icon purple">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="action-content">
+                            <h3>AI Feedback</h3>
+                            <p>Get personalized recommendations to improve your performance.</p>
+                            <a href="ai-feedback.html" class="action-btn">
+                                <i class="fas fa-brain"></i>
+                                Get Feedback
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="action-card">
+                        <div class="action-icon orange">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="action-content">
+                            <h3>Profile Management</h3>
+                            <p>Update your personal, parent, and contact information.</p>
+                            <a href="profile.html" class="action-btn">
+                                <i class="fas fa-edit"></i>
+                                Edit Profile
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                    
+                <!-- Recent Activities -->
+                <div class="recent-activities">
+                    <h3><i class="fas fa-clock"></i> Recent Activities</h3>
+                    <div id="recent-activity">
+                        <div class="loading">Loading recent activities...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/api.js"></script>
+    <script>
+        // Check authentication
+        const token = localStorage.getItem('smart_mentor_token');
+        const user = localStorage.getItem('smart_mentor_user');
+        
+        if (!token || !user) {
+            window.location.href = '../landing.html';
+        }
+        
+        const currentUser = JSON.parse(user);
+        
+        // Check if user is student
+        if (currentUser.role !== 'student') {
+            window.location.href = '../landing.html';
+        }
+        
+        // Update user info
+        document.getElementById('user-email').textContent = currentUser.email;
+        document.getElementById('user-initial').textContent = currentUser.email.charAt(0).toUpperCase();
+        document.getElementById('welcome-name').textContent = currentUser.email.split('@')[0];
+        
+        // Load dashboard data
+        async function loadDashboardData() {
+            try {
+                const response = await API.getStudentDashboard();
+                
+                if (response.success) {
+                    const data = response.data;
+                    
+                    // Update stats
+                    document.getElementById('current-cgpa').textContent = (data.academics?.cgpa || 0).toFixed(1);
+                    document.getElementById('attendance-percentage').textContent = Math.round(data.attendance?.overall || 0) + '%';
+                    document.getElementById('total-subjects').textContent = data.academics?.subjectCount || 0;
+                    document.getElementById('blackmarks-count').textContent = data.blackmarks?.total || 0;
+                    
+                    // Update recent activity
+                    const activityContainer = document.getElementById('recent-activity');
+                    if (data.recentActivities && data.recentActivities.length > 0) {
+                        activityContainer.innerHTML = data.recentActivities.map(activity => `
+                            <div class="activity-item">
+                                <i class="fas fa-info-circle"></i>
+                                <span>${activity.message}</span>
+                                <small>${new Date(activity.date).toLocaleDateString()}</small>
+                            </div>
+                        `).join('');
+                    } else {
+                        activityContainer.innerHTML = '<p class="text-muted">No recent activities</p>';
+                    }
+                } else {
+                    showToast('Error loading dashboard data', 'error');
+                }
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+                showToast('Error loading dashboard data', 'error');
+                
+                // Show default values
+                document.getElementById('recent-activity').innerHTML = '<p class="text-muted">Unable to load recent activities</p>';
+            }
+        }
+        
+        // Logout function
+        function logout() {
+            localStorage.removeItem('smart_mentor_token');
+            localStorage.removeItem('smart_mentor_user');
+            showToast('Logged out successfully', 'success');
+            setTimeout(() => {
+                window.location.href = '../landing.html?from_logout=true';
+            }, 1000);
+        }
+        
+        // Toast function
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            const icon = type === 'success' ? 'fas fa-check-circle' : 
+                        type === 'error' ? 'fas fa-exclamation-circle' : 
+                        'fas fa-info-circle';
+            
+            toast.innerHTML = `
+                <i class="${icon}"></i>
+                <span>${message}</span>
+            `;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.transform = 'translateX(0)';
+            }, 100);
+            
+            setTimeout(() => {
+                toast.style.transform = 'translateX(100%)';
+                toast.style.opacity = '0';
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        toast.parentNode.removeChild(toast);
+                    }
+                }, 300);
+            }, 5000);
+        }
+        
+        // Load data on page load
+        window.addEventListener('load', loadDashboardData);
+    </script>
+    
+    <style>
+        .modern-dashboard {
+            display: flex;
+            min-height: 100vh;
+            background: #f8fafc;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background: #2d3748;
+            color: white;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #4a5568;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+        
+        .logo i {
+            color: #667eea;
+            font-size: 1.5rem;
+        }
+        
+        .sidebar-nav {
+            padding: 1rem 0;
+        }
+        
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            color: #cbd5e0;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        
+        .nav-link:hover {
+            background: #4a5568;
+            color: white;
+        }
+        
+        .nav-link.active {
+            background: #667eea;
+            color: white;
+        }
+        
+        .main-content {
+            margin-left: 250px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .top-header {
+            background: white;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header-left h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin: 0;
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: #667eea;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .dashboard-content-area {
+            padding: 2rem;
+            flex: 1;
+        }
+        
+        .welcome-section {
+            margin-bottom: 2rem;
+        }
+        
+        .welcome-section h2 {
+            font-size: 1.75rem;
+            color: #2d3748;
+            margin: 0 0 0.5rem 0;
+        }
+        
+        .welcome-section p {
+            color: #718096;
+            margin: 0;
+        }
+        
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border-left: 4px solid;
+        }
+        
+        .stat-card.blue {
+            border-color: #3182ce;
+        }
+        
+        .stat-card.green {
+            border-color: #38a169;
+        }
+        
+        .stat-card.orange {
+            border-color: #ed8936;
+        }
+        
+        .stat-card.red {
+            border-color: #e53e3e;
+        }
+        
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+        
+        .stat-card.blue .stat-icon {
+            background: #3182ce;
+        }
+        
+        .stat-card.green .stat-icon {
+            background: #38a169;
+        }
+        
+        .stat-card.orange .stat-icon {
+            background: #ed8936;
+        }
+        
+        .stat-card.red .stat-icon {
+            background: #e53e3e;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin: 0;
+        }
+        
+        .stat-label {
+            color: #718096;
+            font-size: 0.875rem;
+            margin: 0;
+        }
+        
+        .action-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .action-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .action-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            margin-bottom: 1rem;
+        }
+        
+        .action-icon.blue { background: #3182ce; }
+        .action-icon.green { background: #38a169; }
+        .action-icon.orange { background: #ed8936; }
+        .action-icon.purple { background: #805ad5; }
+        
+        .action-content h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin: 0 0 0.5rem 0;
+        }
+        
+        .action-content p {
+            color: #718096;
+            margin: 0 0 1rem 0;
+            font-size: 0.875rem;
+        }
+        
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+        
+        .action-btn:hover {
+            background: #5a67d8;
+        }
+        
+        .recent-activities {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .recent-activities h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin: 0 0 1rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .logout-btn {
+            background: #e53e3e;
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .logout-btn:hover {
+            background: #c53030;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-cards-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</body>
+</html>

@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Feedback - Smart Mentor</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="modern-dashboard">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Smart Mentor</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-link">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="profile.html" class="nav-link">
+                    <i class="fas fa-user"></i>
+                    <span>Profile</span>
+                </a>
+                <a href="academics.html" class="nav-link">
+                    <i class="fas fa-book"></i>
+                    <span>Academics</span>
+                </a>
+                <a href="attendance.html" class="nav-link">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>Attendance</span>
+                </a>
+                <a href="blackmarks.html" class="nav-link">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>Blackmarks</span>
+                </a>
+                <a href="ai-feedback.html" class="nav-link active">
+                    <i class="fas fa-robot"></i>
+                    <span>AI Feedback</span>
+                </a>
+                <a href="messages.html" class="nav-link">
+                    <i class="fas fa-comments"></i>
+                    <span>Messages</span>
+                </a>
+                <a href="settings.html" class="nav-link">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Top Header -->
+            <header class="top-header">
+                <div class="header-left">
+                    <h1>AI Feedback</h1>
+                    <button onclick="refreshFeedback()" class="refresh-btn" title="Refresh feedback data">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                </div>
+                <div class="header-right">
+                    <div class="user-profile">
+                        <span id="user-email">student@email.com</span>
+                        <div class="user-avatar">
+                            <span id="user-initial">S</span>
+                        </div>
+                        <button onclick="logout()" class="logout-btn">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </button>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- AI Feedback Content -->
+            <div class="dashboard-content-area">
+                <!-- Welcome Section -->
+                <div class="welcome-section">
+                    <h2>Mentor Feedback</h2>
+                    <p>View personalized feedback and recommendations from your mentors.</p>
+                </div>
+                
+                <!-- Mentor Feedback Section -->
+                <div class="action-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-user-tie"></i> Feedback from Your Mentor</h2>
+                        <button onclick="refreshFeedback()" class="refresh-btn" title="Refresh feedback data">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </div>
+                    
+                    <!-- All Feedback History -->
+                    <div class="feedback-history-section">
+                        <div id="feedback-history-content">
+                            <div class="loading">Loading all feedback from your mentors...</div>
+                        </div>
+                        <div class="feedback-footer">
+                            <small id="last-updated">Last updated: Loading...</small>
+                        </div>
+                    </div>
+                    
+                    <!-- Performance Analysis -->
+                    <div class="info-card">
+                        <div class="card-header">
+                            <i class="fas fa-chart-line"></i>
+                            <h3>Performance Analysis</h3>
+                        </div>
+                        <div class="card-content">
+                            <div id="performance-analysis">
+                                <div class="loading">Loading analysis...</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Recommendations -->
+                    <div class="info-card">
+                        <div class="card-header">
+                            <i class="fas fa-lightbulb"></i>
+                            <h3>AI Recommendations</h3>
+                        </div>
+                        <div class="card-content">
+                            <div id="ai-recommendations">
+                                <div class="loading">Loading recommendations...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/api.js"></script>
+    <script>
+        // Check authentication
+        const token = localStorage.getItem('smart_mentor_token');
+        const user = localStorage.getItem('smart_mentor_user');
+        
+        if (!token || !user) {
+            window.location.href = '../landing.html';
+        }
+        
+        const currentUser = JSON.parse(user);
+        
+        // Update user info
+        document.getElementById('user-email').textContent = currentUser.email;
+        document.getElementById('user-initial').textContent = currentUser.email.charAt(0).toUpperCase();
+        
+        // Load AI feedback data
+        async function loadAIFeedback() {
+            try {
+                // Get current student's data first
+                const dashboardResponse = await API.getStudentDashboard();
+                if (!dashboardResponse.success) {
+                    showToast('Error loading student data', 'error');
+                    return;
+                }
+                
+                const studentData = dashboardResponse.data;
+                console.log('📋 Student dashboard data:', studentData);
+                
+                // Load all feedback history
+                console.log('📋 Fetching feedback history for student ID:', studentData.studentId);
+                try {
+                    const historyResponse = await API.getFeedbackHistory(studentData.studentId);
+                    console.log('📋 Feedback history response:', historyResponse);
+                    console.log('📊 Response success:', historyResponse.success);
+                    console.log('📊 Feedback count:', historyResponse.data?.feedbackHistory?.length || 0);
+                    
+                    if (historyResponse.success) {
+                        renderFeedbackHistory(studentData, historyResponse.data);
+                    } else {
+                        console.log('📝 No feedback history available');
+                        renderNoFeedback();
+                    }
+                } catch (historyError) {
+                    console.error('❌ Error fetching feedback history:', historyError);
+                    renderNoFeedback();
+                }
+                
+            } catch (error) {
+                console.error('Error loading AI feedback:', error);
+                showToast('Error loading AI feedback', 'error');
+                renderFallbackFeedback();
+            }
+        }
+        
+        function renderFeedbackHistory(studentData, historyData) {
+            const feedbackContent = document.getElementById('feedback-history-content');
+            const lastUpdated = document.getElementById('last-updated');
+            
+            if (historyData.feedbackHistory && historyData.feedbackHistory.length > 0) {
+                feedbackContent.innerHTML = `
+                    <div class="feedback-summary">
+                        <h3>All Feedback (${historyData.totalFeedback} total)</h3>
+                        <p>Complete feedback history from your mentors</p>
+                    </div>
+                    <div class="feedback-timeline">
+                        ${historyData.feedbackHistory.map((feedback, index) => `
+                            <div class="feedback-item">
+                                <div class="feedback-header">
+                                    <div class="mentor-info">
+                                        <div class="mentor-avatar">
+                                            <i class="fas fa-user-tie"></i>
+                                        </div>
+                                        <div class="mentor-details">
+                                            <h4>${feedback.mentorName || 'Your Mentor'}</h4>
+                                            <span class="mentor-email">${feedback.mentorEmail || ''}</span>
+                                        </div>
+                                    </div>
+                                    <div class="feedback-meta">
+                                        <span class="feedback-type">${feedback.feedbackType || 'General'}</span>
+                                        <span class="feedback-date">${new Date(feedback.createdAt).toLocaleDateString()}</span>
+                                    </div>
+                                </div>
+                                <div class="feedback-content">
+                                    <p>${feedback.feedback}</p>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                
+                const latestFeedback = historyData.feedbackHistory[0];
+                lastUpdated.textContent = `Last feedback: ${new Date(latestFeedback.createdAt).toLocaleString()}`;
+            } else {
+                renderNoFeedback();
+            }
+            
+            // Render performance analysis
+            renderPerformanceAnalysis(studentData);
+            
+            // Render recommendations
+            renderRecommendations(studentData);
+        }
+        
+        function renderNoFeedback() {
+            const feedbackContent = document.getElementById('feedback-history-content');
+            const lastUpdated = document.getElementById('last-updated');
+            
+            feedbackContent.innerHTML = `
+                <div class="no-feedback">
+                    <div class="no-feedback-icon">
+                        <i class="fas fa-comment-slash"></i>
+                    </div>
+                    <h3>No Feedback Yet</h3>
+                    <p>Your mentor hasn't provided any feedback yet. Check back later for personalized recommendations and guidance.</p>
+                </div>
+            `;
+            
+            lastUpdated.textContent = `Last checked: ${new Date().toLocaleString()}`;
+        }
+        
+        function renderFallbackFeedback() {
+            const feedbackContent = document.getElementById('feedback-history-content');
+            const lastUpdated = document.getElementById('last-updated');
+            
+            feedbackContent.innerHTML = `
+                <div class="no-feedback">
+                    <div class="no-feedback-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <h3>Error Loading Feedback</h3>
+                    <p>There was an error loading your feedback. Please refresh the page or contact support if the issue persists.</p>
+                </div>
+            `;
+            
+            lastUpdated.textContent = `Error occurred: ${new Date().toLocaleString()}`;
+        }
+        
+        function renderMentorFeedback(data, mentorFeedback) {
+            const feedbackContent = document.getElementById('mentor-feedback-content');
+            const lastUpdated = document.getElementById('last-updated');
+            
+            if (mentorFeedback && mentorFeedback.lastFeedback) {
+                // Show mentor-generated feedback
+                feedbackContent.innerHTML = `
+                    <div class="mentor-feedback">
+                        <div class="feedback-header">
+                            <div class="mentor-info">
+                                <div class="mentor-avatar">
+                                    <i class="fas fa-user-tie"></i>
+                                </div>
+                                <div class="mentor-details">
+                                    <h3>${mentorFeedback.mentorName || 'Your Mentor'}</h3>
+                                    <span class="mentor-email">${mentorFeedback.mentorEmail || ''}</span>
+                                </div>
+                            </div>
+                            <span class="feedback-type">${mentorFeedback.feedbackType || 'General'}</span>
+                        </div>
+                        <div class="feedback-text">
+                            <p>${mentorFeedback.lastFeedback}</p>
+                        </div>
+                    </div>
+                `;
+                
+                lastUpdated.textContent = `Last updated: ${new Date(mentorFeedback.lastUpdated).toLocaleString()}`;
+            } else {
+                // No mentor feedback available
+                feedbackContent.innerHTML = `
+                    <div class="no-feedback">
+                        <div class="no-feedback-icon">
+                            <i class="fas fa-comment-slash"></i>
+                        </div>
+                        <h3>No Feedback Yet</h3>
+                        <p>Your mentor hasn't provided any feedback yet. Check back later for personalized recommendations and guidance.</p>
+                    </div>
+                `;
+                
+                lastUpdated.textContent = `Last checked: ${new Date().toLocaleString()}`;
+            }
+            
+            // Render performance analysis
+            renderPerformanceAnalysis(data);
+            
+            // Render recommendations
+            renderRecommendations(data);
+        }
+        
+        function generateFeedbackText(data) {
+            const cgpa = data.academics?.cgpa || 0;
+            const attendance = data.attendance?.overall || 0;
+            const blackmarks = data.blackmarks?.total || 0;
+            const subjects = data.academics?.subjects || [];
+            
+            let feedback = `Hello ${currentUser.email.split('@')[0]}! Based on my analysis of your academic performance, `;
+            
+            // CGPA Analysis
+            if (cgpa >= 8.5) {
+                feedback += "you're performing exceptionally well academically with a CGPA of " + cgpa.toFixed(1) + ". ";
+            } else if (cgpa >= 7.0) {
+                feedback += "you're doing well academically with a CGPA of " + cgpa.toFixed(1) + ", but there's room for improvement. ";
+            } else if (cgpa >= 6.0) {
+                feedback += "your CGPA of " + cgpa.toFixed(1) + " indicates you need to focus more on your studies. ";
+            } else {
+                feedback += "your CGPA of " + cgpa.toFixed(1) + " requires immediate attention and improvement. ";
+            }
+            
+            // Attendance Analysis
+            if (attendance >= 90) {
+                feedback += "Your attendance of " + Math.round(attendance) + "% is excellent! ";
+            } else if (attendance >= 75) {
+                feedback += "Your attendance of " + Math.round(attendance) + "% is good, but try to maintain consistency. ";
+            } else {
+                feedback += "Your attendance of " + Math.round(attendance) + "% is below the required threshold and needs immediate improvement. ";
+            }
+            
+            // Blackmarks Analysis
+            if (blackmarks === 0) {
+                feedback += "Great job maintaining excellent behavior with no blackmarks! ";
+            } else if (blackmarks <= 2) {
+                feedback += "You have " + blackmarks + " blackmark(s). Focus on improving your behavior. ";
+            } else {
+                feedback += "You have " + blackmarks + " blackmarks, which is concerning. Please work on behavioral improvements. ";
+            }
+            
+            return feedback;
+        }
+        
+        function renderPerformanceAnalysis(data) {
+            const analysisContainer = document.getElementById('performance-analysis');
+            const cgpa = data.academics?.cgpa || 0;
+            const attendance = data.attendance?.overall || 0;
+            
+            analysisContainer.innerHTML = `
+                <div class="analysis-grid">
+                    <div class="analysis-item ${cgpa >= 8 ? 'positive' : cgpa >= 6 ? 'neutral' : 'negative'}">
+                        <i class="fas fa-graduation-cap"></i>
+                        <h4>Academic Performance</h4>
+                        <p>CGPA: ${cgpa.toFixed(1)}/10</p>
+                        <span class="status">${cgpa >= 8 ? 'Excellent' : cgpa >= 6 ? 'Good' : 'Needs Improvement'}</span>
+                    </div>
+                    <div class="analysis-item ${attendance >= 90 ? 'positive' : attendance >= 75 ? 'neutral' : 'negative'}">
+                        <i class="fas fa-calendar-check"></i>
+                        <h4>Attendance</h4>
+                        <p>${Math.round(attendance)}%</p>
+                        <span class="status">${attendance >= 90 ? 'Excellent' : attendance >= 75 ? 'Good' : 'Poor'}</span>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function renderRecommendations(data) {
+            const recommendationsContainer = document.getElementById('ai-recommendations');
+            const cgpa = data.academics?.cgpa || 0;
+            const attendance = data.attendance?.overall || 0;
+            const blackmarks = data.blackmarks?.total || 0;
+            
+            let recommendations = [];
+            
+            // Academic recommendations
+            if (cgpa < 7) {
+                recommendations.push({
+                    icon: 'fas fa-book',
+                    title: 'Study Strategy',
+                    text: 'Create a structured study schedule and focus on understanding concepts rather than memorization.'
+                });
+            }
+            
+            // Attendance recommendations
+            if (attendance < 85) {
+                recommendations.push({
+                    icon: 'fas fa-clock',
+                    title: 'Attendance Improvement',
+                    text: 'Set reminders for classes and maintain a regular schedule to improve attendance.'
+                });
+            }
+            
+            // Behavior recommendations
+            if (blackmarks > 0) {
+                recommendations.push({
+                    icon: 'fas fa-handshake',
+                    title: 'Behavioral Improvement',
+                    text: 'Focus on following college guidelines and maintaining respectful interactions.'
+                });
+            }
+            
+            // General recommendations
+            recommendations.push({
+                icon: 'fas fa-comments',
+                title: 'Mentor Communication',
+                text: 'Regular communication with your mentor can help address challenges early.'
+            });
+            
+            recommendationsContainer.innerHTML = `
+                <div class="recommendations-grid">
+                    ${recommendations.map(rec => `
+                        <div class="recommendation-item">
+                            <i class="${rec.icon}"></i>
+                            <h4>${rec.title}</h4>
+                            <p>${rec.text}</p>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+        
+        function renderFallbackFeedback() {
+            document.getElementById('ai-feedback-content').innerHTML = `
+                <div class="feedback-text">
+                    <p>Welcome to Smart Mentor AI! I'm here to help you improve your academic performance. Please ensure your academic data is updated to receive personalized feedback.</p>
+                </div>
+            `;
+        }
+        
+        function generateNewFeedback() {
+            showToast('Generating new AI feedback...', 'info');
+            loadAIFeedback();
+        }
+        
+        // Logout function
+        function logout() {
+            localStorage.removeItem('smart_mentor_token');
+            localStorage.removeItem('smart_mentor_user');
+            showToast('Logged out successfully', 'success');
+            setTimeout(() => {
+                window.location.href = '../landing.html';
+            }, 1000);
+        }
+        
+        // Toast function
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            const icon = type === 'success' ? 'fas fa-check-circle' : 
+                        type === 'error' ? 'fas fa-exclamation-circle' : 
+                        'fas fa-info-circle';
+            
+            toast.innerHTML = `
+                <i class="${icon}"></i>
+                <span>${message}</span>
+            `;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.transform = 'translateX(0)';
+            }, 100);
+            
+            setTimeout(() => {
+                toast.style.transform = 'translateX(100%)';
+                toast.style.opacity = '0';
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        toast.parentNode.removeChild(toast);
+                    }
+                }, 300);
+            }, 5000);
+        }
+        
+        // Auto-refresh functionality
+        let autoRefreshInterval;
+        
+        function startAutoRefresh() {
+            // Refresh every 30 seconds
+            autoRefreshInterval = setInterval(() => {
+                console.log('🔄 Auto-refreshing feedback data...');
+                loadAIFeedback();
+            }, 30000);
+        }
+        
+        function stopAutoRefresh() {
+            if (autoRefreshInterval) {
+                clearInterval(autoRefreshInterval);
+                autoRefreshInterval = null;
+            }
+        }
+        
+        // Manual refresh function
+        function refreshFeedback() {
+            showToast('Refreshing feedback data...', 'info');
+            loadAIFeedback();
+        }
+        
+        // Load data on page load
+        window.addEventListener('load', () => {
+            loadAIFeedback();
+            startAutoRefresh();
+        });
+        
+        // Stop auto-refresh when page is hidden
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                stopAutoRefresh();
+            } else {
+                startAutoRefresh();
+            }
+        });
+    </script>
+    
+    <style>
+        .modern-dashboard {
+            display: flex;
+            min-height: 100vh;
+            background: #f8fafc;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background: #2d3748;
+            color: white;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #4a5568;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+        
+        .logo i {
+            color: #667eea;
+            font-size: 1.5rem;
+        }
+        
+        .sidebar-nav {
+            padding: 1rem 0;
+        }
+        
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            color: #cbd5e0;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        
+        .nav-link:hover {
+            background: #4a5568;
+            color: white;
+        }
+        
+        .nav-link.active {
+            background: #667eea;
+            color: white;
+        }
+        
+        .main-content {
+            margin-left: 250px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .top-header {
+            background: white;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .header-left h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin: 0;
+        }
+        
+        .refresh-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .refresh-btn:hover {
+            background: #5a67d8;
+            transform: rotate(180deg);
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: #667eea;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .dashboard-content-area {
+            padding: 2rem;
+            flex: 1;
+        }
+        
+        .welcome-section {
+            margin-bottom: 2rem;
+        }
+        
+        .welcome-section h2 {
+            font-size: 1.75rem;
+            color: #2d3748;
+            margin: 0 0 0.5rem 0;
+        }
+        
+        .welcome-section p {
+            color: #718096;
+            margin: 0;
+        }
+        
+        .action-section {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .section-header h2 {
+            margin: 0;
+            color: #2d3748;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .logout-btn {
+            background: #e53e3e;
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .logout-btn:hover {
+            background: #c53030;
+        }
+        
+        .ai-feedback-card {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            border-radius: var(--radius-xl);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 2px solid rgba(102, 126, 234, 0.2);
+        }
+        
+        .ai-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .ai-avatar {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+        
+        .ai-info h3 {
+            margin: 0;
+            color: var(--gray-800);
+        }
+        
+        .ai-info p {
+            margin: 0;
+            color: var(--gray-600);
+            font-size: 0.875rem;
+        }
+        
+        .feedback-text {
+            background: white;
+            padding: 1.5rem;
+            border-radius: var(--radius-lg);
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .feedback-text p {
+            margin: 0;
+            line-height: 1.6;
+            color: var(--gray-700);
+        }
+        
+        .ai-footer {
+            margin-top: 1rem;
+            text-align: right;
+            color: var(--gray-500);
+        }
+        
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+        
+        .analysis-item {
+            padding: 1.5rem;
+            border-radius: var(--radius-lg);
+            text-align: center;
+            border-left: 4px solid;
+        }
+        
+        .analysis-item.positive {
+            background: rgba(72, 187, 120, 0.1);
+            border-color: var(--success-color);
+        }
+        
+        .analysis-item.neutral {
+            background: rgba(102, 126, 234, 0.1);
+            border-color: var(--primary-color);
+        }
+        
+        .analysis-item.negative {
+            background: rgba(245, 101, 101, 0.1);
+            border-color: var(--error-color);
+        }
+        
+        .analysis-item i {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .analysis-item.positive i { color: var(--success-color); }
+        .analysis-item.neutral i { color: var(--primary-color); }
+        .analysis-item.negative i { color: var(--error-color); }
+        
+        .analysis-item h4 {
+            margin: 0.5rem 0;
+            color: var(--gray-800);
+        }
+        
+        .analysis-item p {
+            margin: 0.5rem 0;
+            font-weight: 600;
+            font-size: 1.125rem;
+        }
+        
+        .analysis-item .status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .analysis-item.positive .status {
+            background: var(--success-color);
+            color: white;
+        }
+        
+        .analysis-item.neutral .status {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .analysis-item.negative .status {
+            background: var(--error-color);
+            color: white;
+        }
+        
+        .recommendations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+        
+        .recommendation-item {
+            padding: 1.5rem;
+            background: var(--gray-50);
+            border-radius: var(--radius-lg);
+            text-align: center;
+        }
+        
+        .recommendation-item i {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .recommendation-item h4 {
+            margin: 0 0 0.5rem 0;
+            color: var(--gray-800);
+        }
+        
+        .recommendation-item p {
+            margin: 0;
+            color: var(--gray-600);
+        }
+        
+        /* Feedback History Section */
+        .feedback-history-section {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border: 1px solid #e2e8f0;
+        }
+        
+        .feedback-summary {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f7fafc;
+        }
+        
+        .feedback-summary h3 {
+            margin: 0 0 0.5rem 0;
+            color: #2d3748;
+            font-size: 1.25rem;
+        }
+        
+        .feedback-summary p {
+            margin: 0;
+            color: #718096;
+        }
+        
+        .feedback-timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .feedback-item {
+            background: linear-gradient(135deg, #667eea15, #667eea05);
+            border: 2px solid #667eea;
+            border-radius: 12px;
+            padding: 1.5rem;
+            position: relative;
+        }
+        
+        .feedback-item:nth-child(even) {
+            background: linear-gradient(135deg, #38a16915, #38a16905);
+            border-color: #38a169;
+        }
+        
+        .feedback-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+        
+        .feedback-meta {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 0.5rem;
+        }
+        
+        .feedback-date {
+            color: #718096;
+            font-size: 0.875rem;
+        }
+        
+        .feedback-content {
+            line-height: 1.6;
+            color: #4a5568;
+        }
+        
+        .feedback-content p {
+            margin: 0;
+        }
+        
+        /* Feedback specific styles */
+        .mentor-feedback {
+            background: linear-gradient(135deg, #667eea15, #667eea05);
+            border: 2px solid #667eea;
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+        
+        .mentor-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .mentor-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #667eea;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.25rem;
+        }
+        
+        .mentor-details h3 {
+            margin: 0;
+            color: #2d3748;
+            font-size: 1.1rem;
+        }
+        
+        .mentor-email {
+            color: #718096;
+            font-size: 0.875rem;
+        }
+        
+        .no-feedback {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: #718096;
+        }
+        
+        .no-feedback-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+        
+        .no-feedback h3 {
+            margin: 0 0 1rem 0;
+            color: #4a5568;
+        }
+        
+        .no-feedback p {
+            margin: 0;
+            line-height: 1.6;
+        }
+        
+        .ai-generated-feedback {
+            background: linear-gradient(135deg, #38a16915, #38a16905);
+            border: 2px solid #38a169;
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+        
+        .feedback-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            color: #2d3748;
+        }
+        
+        .feedback-type {
+            background: #667eea;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            text-transform: capitalize;
+            margin-left: auto;
+        }
+        
+        .feedback-text {
+            line-height: 1.6;
+            color: #4a5568;
+            margin-bottom: 1rem;
+        }
+        
+        .feedback-note {
+            padding: 0.75rem;
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            color: #856404;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .analysis-grid,
+            .recommendations-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</body>
+</html>

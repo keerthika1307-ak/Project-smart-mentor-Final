@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academics - Smart Mentor</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="modern-dashboard">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Smart Mentor</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-link">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="profile.html" class="nav-link">
+                    <i class="fas fa-user"></i>
+                    <span>Profile</span>
+                </a>
+                <a href="academics.html" class="nav-link active">
+                    <i class="fas fa-book"></i>
+                    <span>Academics</span>
+                </a>
+                <a href="attendance.html" class="nav-link">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>Attendance</span>
+                </a>
+                <a href="blackmarks.html" class="nav-link">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>Blackmarks</span>
+                </a>
+                <a href="ai-feedback.html" class="nav-link">
+                    <i class="fas fa-robot"></i>
+                    <span>AI Feedback</span>
+                </a>
+                <a href="messages.html" class="nav-link">
+                    <i class="fas fa-comments"></i>
+                    <span>Messages</span>
+                </a>
+                <a href="settings.html" class="nav-link">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Top Header -->
+            <header class="top-header">
+                <div class="header-left">
+                    <h1>Academic Performance</h1>
+                </div>
+                <div class="header-right">
+                    <div class="user-profile">
+                        <span id="user-email">student@email.com</span>
+                        <div class="user-avatar">
+                            <span id="user-initial">S</span>
+                        </div>
+                        <button onclick="logout()" class="logout-btn">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </button>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Academics Content -->
+            <div class="dashboard-content-area">
+                <!-- Welcome Section -->
+                <div class="welcome-section">
+                    <h2>Academic Performance</h2>
+                    <p>Track your subject-wise marks and overall CGPA calculation.</p>
+                    <button onclick="loadAcademicsData()" class="btn btn-primary" id="refresh-btn" style="margin-top: 1rem;">
+                        <i class="fas fa-refresh"></i>
+                        Refresh Data
+                    </button>
+                    <small style="color: #718096; margin-left: 1rem;">
+                        <i class="fas fa-clock"></i>
+                        Auto-refreshes every 10 seconds
+                    </small>
+                </div>
+                    
+                    <!-- Academic Stats -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value" id="total-subjects">0</div>
+                            <div class="stat-label">Total Subjects</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="avg-percentage">0%</div>
+                            <div class="stat-label">Average Percentage</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="current-cgpa">0.0</div>
+                            <div class="stat-label">Current CGPA</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="total-marks">0</div>
+                            <div class="stat-label">Total Marks</div>
+                        </div>
+                    </div>
+                    
+                    <!-- CGPA Scale Info -->
+                    <div class="info-card">
+                        <div class="card-header">
+                            <i class="fas fa-info-circle"></i>
+                            <h3>CGPA Grading Scale</h3>
+                        </div>
+                        <div class="card-content">
+                            <div class="grade-scale">
+                                <div class="grade-item">
+                                    <span class="grade">10</span>
+                                    <span class="range">90-100%</span>
+                                    <span class="badge badge-success">Excellent</span>
+                                </div>
+                                <div class="grade-item">
+                                    <span class="grade">9</span>
+                                    <span class="range">80-89%</span>
+                                    <span class="badge badge-success">Very Good</span>
+                                </div>
+                                <div class="grade-item">
+                                    <span class="grade">8</span>
+                                    <span class="range">70-79%</span>
+                                    <span class="badge badge-info">Good</span>
+                                </div>
+                                <div class="grade-item">
+                                    <span class="grade">7</span>
+                                    <span class="range">60-69%</span>
+                                    <span class="badge badge-warning">Average</span>
+                                </div>
+                                <div class="grade-item">
+                                    <span class="grade">6</span>
+                                    <span class="range">Below 60%</span>
+                                    <span class="badge badge-error">Needs Improvement</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Subjects Performance -->
+                    <div class="info-card">
+                        <div class="card-header">
+                            <i class="fas fa-chart-line"></i>
+                            <h3>Subject-wise Performance</h3>
+                        </div>
+                        <div class="card-content">
+                            <div id="subjects-list">
+                                <div class="loading">Loading subjects...</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Performance Chart -->
+                    <div class="info-card">
+                        <div class="card-header">
+                            <i class="fas fa-chart-bar"></i>
+                            <h3>Performance Analysis</h3>
+                        </div>
+                        <div class="card-content">
+                            <div id="performance-chart">
+                                <div class="chart-placeholder">
+                                    <i class="fas fa-chart-line"></i>
+                                    <p>Performance visualization will be displayed here</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/api.js"></script>
+    <script>
+        // Check authentication
+        const token = localStorage.getItem('smart_mentor_token');
+        const user = localStorage.getItem('smart_mentor_user');
+        
+        if (!token || !user) {
+            window.location.href = '../landing.html';
+        }
+        
+        const currentUser = JSON.parse(user);
+        
+        // Update user info
+        document.getElementById('user-email').textContent = currentUser.email;
+        document.getElementById('user-initial').textContent = currentUser.email.charAt(0).toUpperCase();
+        
+        // Load academics data
+        async function loadAcademicsData(isAutoRefresh = false) {
+            const refreshBtn = document.getElementById('refresh-btn');
+            
+            try {
+                console.log('Loading student academics data...');
+                
+                // Show loading state only for manual refresh
+                if (!isAutoRefresh && refreshBtn) {
+                    refreshBtn.disabled = true;
+                    refreshBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
+                }
+                
+                const response = await API.getStudentDashboard();
+                console.log('Student dashboard response:', response);
+                
+                if (response.success) {
+                    const data = response.data;
+                    console.log('Academics data:', data.academics);
+                    
+                    // Check for new marks (more sensitive detection)
+                    if (isAutoRefresh && (previousSubjectCount > 0 || previousTotalMarks > 0)) {
+                        const currentSubjectCount = data.academics.subjectCount || 0;
+                        const currentTotalMarks = data.academics.totalMarks || 0;
+                        
+                        if (currentSubjectCount > previousSubjectCount) {
+                            showToast(`🎉 New subject added! You now have ${currentSubjectCount} subjects.`, 'success');
+                            console.log('🎉 New subject detected!');
+                        } else if (currentTotalMarks !== previousTotalMarks) {
+                            showToast('📊 Your marks have been updated by your mentor!', 'success');
+                            console.log('📊 Marks updated detected!');
+                        } else if (previousSubjectCount === 0 && currentSubjectCount > 0) {
+                            showToast(`🎓 Your academic data is now available! ${currentSubjectCount} subjects loaded.`, 'success');
+                            console.log('🎓 Initial data loaded!');
+                        }
+                    }
+                    
+                    // Update tracking variables
+                    previousSubjectCount = data.academics.subjectCount || 0;
+                    previousTotalMarks = data.academics.totalMarks || 0;
+                    
+                    renderAcademics(data.academics);
+                    
+                    // Show success toast only on manual refresh
+                    if (!isAutoRefresh && refreshBtn && refreshBtn.innerHTML.includes('Loading')) {
+                        showToast('Data refreshed successfully', 'success');
+                    }
+                } else {
+                    console.error('Failed to load academics:', response.message);
+                    showToast('Error loading academics data: ' + (response.message || 'Unknown error'), 'error');
+                }
+            } catch (error) {
+                console.error('Error loading academics:', error);
+                showToast('Error loading academics data: ' + error.message, 'error');
+                renderEmptyState();
+            } finally {
+                // Reset button state only for manual refresh
+                if (!isAutoRefresh && refreshBtn) {
+                    refreshBtn.disabled = false;
+                    refreshBtn.innerHTML = '<i class="fas fa-refresh"></i> Refresh Data';
+                }
+            }
+        }
+        
+        function renderAcademics(academics) {
+            console.log('Rendering academics data:', academics);
+            
+            // Update stats
+            document.getElementById('total-subjects').textContent = academics?.subjectCount || 0;
+            document.getElementById('avg-percentage').textContent = Math.round(academics?.averagePercentage || 0) + '%';
+            document.getElementById('current-cgpa').textContent = (academics?.cgpa || 0).toFixed(1);
+            document.getElementById('total-marks').textContent = academics?.totalMarks || 0;
+            
+            const subjectsList = document.getElementById('subjects-list');
+            
+            if (!academics?.subjects || academics.subjects.length === 0) {
+                subjectsList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-book-open"></i>
+                        <h3>No Subjects Added</h3>
+                        <p>Your mentor hasn't added any subjects yet. Please contact your mentor to add subjects and marks.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            subjectsList.innerHTML = `
+                <table class="subjects-table">
+                    <thead>
+                        <tr>
+                            <th>Subject</th>
+                            <th>Marks</th>
+                            <th>Percentage</th>
+                            <th>Grade</th>
+                            <th>CGPA Points</th>
+                            <th>Date Added</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${academics.subjects.map(subject => `
+                            <tr>
+                                <td><strong>${subject.name}</strong></td>
+                                <td>${subject.marks}/100</td>
+                                <td>${subject.marks}%</td>
+                                <td><span class="badge ${getGradeBadgeClass(subject.marks)}">${getGrade(subject.marks)}</span></td>
+                                <td>${getCGPAPoints(subject.marks)}</td>
+                                <td>${new Date(subject.addedAt || subject.createdAt).toLocaleDateString()}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+        
+        function renderEmptyState() {
+            document.getElementById('subjects-list').innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <h3>Unable to Load Data</h3>
+                    <p>There was an error loading your academic data. Please try refreshing the page.</p>
+                    <button onclick="loadAcademicsData()" class="btn btn-primary">
+                        <i class="fas fa-refresh"></i>
+                        Retry
+                    </button>
+                </div>
+            `;
+        }
+        
+        function getGrade(marks) {
+            if (marks >= 90) return 'A+';
+            if (marks >= 80) return 'A';
+            if (marks >= 70) return 'B+';
+            if (marks >= 60) return 'B';
+            if (marks >= 50) return 'C';
+            return 'F';
+        }
+        
+        function getCGPAPoints(marks) {
+            if (marks >= 90) return '10';
+            if (marks >= 80) return '9';
+            if (marks >= 70) return '8';
+            if (marks >= 60) return '7';
+            return '6';
+        }
+        
+        function getGradeBadgeClass(marks) {
+            if (marks >= 80) return 'badge-success';
+            if (marks >= 60) return 'badge-primary';
+            if (marks >= 50) return 'badge-warning';
+            return 'badge-danger';
+        }
+        
+        // Logout function
+        function logout() {
+            localStorage.removeItem('smart_mentor_token');
+            localStorage.removeItem('smart_mentor_user');
+            showToast('Logged out successfully', 'success');
+            setTimeout(() => {
+                window.location.href = '../landing.html';
+            }, 1000);
+        }
+        
+        // Toast function
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            const icon = type === 'success' ? 'fas fa-check-circle' : 
+                        type === 'error' ? 'fas fa-exclamation-circle' : 
+                        'fas fa-info-circle';
+            
+            toast.innerHTML = `
+                <i class="${icon}"></i>
+                <span>${message}</span>
+            `;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.transform = 'translateX(0)';
+            }, 100);
+            
+            setTimeout(() => {
+                toast.style.transform = 'translateX(100%)';
+                toast.style.opacity = '0';
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        toast.parentNode.removeChild(toast);
+                    }
+                }, 300);
+            }, 5000);
+        }
+        
+        // Track previous subject count for new marks detection
+        let previousSubjectCount = 0;
+        let previousTotalMarks = 0;
+        
+        // Auto-refresh data every 10 seconds for better real-time updates
+        function startAutoRefresh() {
+            setInterval(() => {
+                console.log('Auto-refreshing academics data...');
+                loadAcademicsData(true); // Pass true to indicate auto-refresh
+            }, 10000); // 10 seconds for faster updates
+        }
+        
+        // Load data on page load
+        window.addEventListener('load', () => {
+            loadAcademicsData();
+            startAutoRefresh();
+        });
+    </script>
+    
+    <style>
+        .modern-dashboard {
+            display: flex;
+            min-height: 100vh;
+            background: #f8fafc;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background: #2d3748;
+            color: white;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #4a5568;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+        
+        .logo i {
+            color: #667eea;
+            font-size: 1.5rem;
+        }
+        
+        .sidebar-nav {
+            padding: 1rem 0;
+        }
+        
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            color: #cbd5e0;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        
+        .nav-link:hover {
+            background: #4a5568;
+            color: white;
+        }
+        
+        .nav-link.active {
+            background: #667eea;
+            color: white;
+        }
+        
+        .main-content {
+            margin-left: 250px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .top-header {
+            background: white;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header-left h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin: 0;
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: #667eea;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .dashboard-content-area {
+            padding: 2rem;
+            flex: 1;
+        }
+        
+        .welcome-section {
+            margin-bottom: 2rem;
+        }
+        
+        .welcome-section h2 {
+            font-size: 1.75rem;
+            color: #2d3748;
+            margin: 0 0 0.5rem 0;
+        }
+        
+        .welcome-section p {
+            color: #718096;
+            margin: 0;
+        }
+        
+        .logout-btn {
+            background: #e53e3e;
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .logout-btn:hover {
+            background: #c53030;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            color: #718096;
+            font-size: 0.875rem;
+        }
+        
+        .info-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .card-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .card-header h3 {
+            margin: 0;
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #2d3748;
+        }
+        
+        .card-content {
+            padding: 1.5rem;
+        }
+        
+        .grade-scale {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .grade-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            background: #f7fafc;
+            border-radius: 12px;
+        }
+        
+        .grade-item .grade {
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: #667eea;
+            min-width: 30px;
+        }
+        
+        .grade-item .range {
+            font-weight: 500;
+            color: #4a5568;
+            min-width: 70px;
+        }
+        
+        .badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .badge-success {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+        
+        .badge-primary {
+            background: #bee3f8;
+            color: #2a4365;
+        }
+        
+        .badge-warning {
+            background: #faf089;
+            color: #744210;
+        }
+        
+        .badge-danger {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+        
+        .subjects-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        
+        .subjects-table th,
+        .subjects-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .subjects-table th {
+            background: #f7fafc;
+            font-weight: 600;
+            color: #2d3748;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: #718096;
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            color: #a0aec0;
+            margin-bottom: 1rem;
+        }
+        
+        .empty-state h3 {
+            color: #4a5568;
+            margin-bottom: 0.5rem;
+        }
+        
+        .chart-placeholder {
+            text-align: center;
+            padding: 2rem;
+            color: #718096;
+            background: #f7fafc;
+            border-radius: 12px;
+        }
+        
+        .chart-placeholder i {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: #a0aec0;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+        
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #5a67d8;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .grade-scale {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</body>
+</html>

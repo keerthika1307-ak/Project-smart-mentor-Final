@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blackmarks - Smart Mentor</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="modern-dashboard">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Smart Mentor</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-link">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="profile.html" class="nav-link">
+                    <i class="fas fa-user"></i>
+                    <span>Profile</span>
+                </a>
+                <a href="academics.html" class="nav-link">
+                    <i class="fas fa-book"></i>
+                    <span>Academics</span>
+                </a>
+                <a href="attendance.html" class="nav-link">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>Attendance</span>
+                </a>
+                <a href="blackmarks.html" class="nav-link active">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>Blackmarks</span>
+                </a>
+                <a href="ai-feedback.html" class="nav-link">
+                    <i class="fas fa-robot"></i>
+                    <span>AI Feedback</span>
+                </a>
+                <a href="messages.html" class="nav-link">
+                    <i class="fas fa-comments"></i>
+                    <span>Messages</span>
+                </a>
+                <a href="settings.html" class="nav-link">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Top Header -->
+            <header class="top-header">
+                <div class="header-left">
+                    <h1>Blackmarks</h1>
+                </div>
+                <div class="header-right">
+                    <div class="user-profile">
+                        <span id="user-email">student@email.com</span>
+                        <div class="user-avatar">
+                            <span id="user-initial">S</span>
+                        </div>
+                        <button onclick="logout()" class="logout-btn">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </button>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Blackmarks Content -->
+            <div class="dashboard-content-area">
+                <!-- Welcome Section -->
+                <div class="welcome-section">
+                    <h2>Blackmarks Record</h2>
+                    <p>View your disciplinary records and improvement suggestions.</p>
+                </div>
+                    
+                    <!-- Blackmarks Stats -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value text-error" id="total-blackmarks">0</div>
+                            <div class="stat-label">Total Blackmarks</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value text-error" id="high-severity">0</div>
+                            <div class="stat-label">High Severity</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value text-warning" id="medium-severity">0</div>
+                            <div class="stat-label">Medium Severity</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value text-info" id="low-severity">0</div>
+                            <div class="stat-label">Low Severity</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Behavior Status -->
+                    <div class="info-card">
+                        <div class="card-header">
+                            <i class="fas fa-user-check"></i>
+                            <h3>Behavior Status</h3>
+                        </div>
+                        <div class="card-content">
+                            <div id="behavior-status">
+                                <div class="loading">Loading behavior status...</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Blackmarks History -->
+                    <div class="info-card">
+                        <div class="card-header">
+                            <i class="fas fa-history"></i>
+                            <h3>Blackmarks History</h3>
+                        </div>
+                        <div class="card-content">
+                            <div id="blackmarks-list">
+                                <div class="loading">Loading blackmarks...</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Improvement Tips -->
+                    <div class="info-card">
+                        <div class="card-header">
+                            <i class="fas fa-lightbulb"></i>
+                            <h3>Improvement Tips</h3>
+                        </div>
+                        <div class="card-content">
+                            <div class="tips-grid">
+                                <div class="tip-item">
+                                    <i class="fas fa-clock"></i>
+                                    <h4>Punctuality</h4>
+                                    <p>Always arrive on time for classes and activities to avoid attendance-related blackmarks.</p>
+                                </div>
+                                <div class="tip-item">
+                                    <i class="fas fa-handshake"></i>
+                                    <h4>Respect</h4>
+                                    <p>Maintain respectful behavior with teachers, staff, and fellow students.</p>
+                                </div>
+                                <div class="tip-item">
+                                    <i class="fas fa-book-open"></i>
+                                    <h4>Academic Integrity</h4>
+                                    <p>Follow academic guidelines and avoid any form of misconduct or cheating.</p>
+                                </div>
+                                <div class="tip-item">
+                                    <i class="fas fa-users"></i>
+                                    <h4>Participation</h4>
+                                    <p>Actively participate in class discussions and college activities.</p>
+                                </div>
+                                <div class="tip-item">
+                                    <i class="fas fa-mobile-alt"></i>
+                                    <h4>Device Usage</h4>
+                                    <p>Use mobile devices and technology responsibly during class hours.</p>
+                                </div>
+                                <div class="tip-item">
+                                    <i class="fas fa-comments"></i>
+                                    <h4>Communication</h4>
+                                    <p>Communicate openly with mentors about any challenges you're facing.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/api.js"></script>
+    <script>
+        // Check authentication
+        const token = localStorage.getItem('smart_mentor_token');
+        const user = localStorage.getItem('smart_mentor_user');
+        
+        if (!token || !user) {
+            window.location.href = '../landing.html';
+        }
+        
+        const currentUser = JSON.parse(user);
+        
+        // Update user info
+        document.getElementById('user-email').textContent = currentUser.email;
+        document.getElementById('user-initial').textContent = currentUser.email.charAt(0).toUpperCase();
+        
+        // Load blackmarks data
+        async function loadBlackmarksData() {
+            try {
+                const response = await API.getStudentDashboard();
+                
+                if (response.success) {
+                    const data = response.data;
+                    renderBlackmarks(data.blackmarks);
+                } else {
+                    showToast('Error loading blackmarks data', 'error');
+                }
+            } catch (error) {
+                console.error('Error loading blackmarks:', error);
+                showToast('Error loading blackmarks data', 'error');
+                renderEmptyState();
+            }
+        }
+        
+        function renderBlackmarks(blackmarks) {
+            const total = blackmarks?.total || 0;
+            const recent = blackmarks?.recent || [];
+            
+            // Update stats
+            document.getElementById('total-blackmarks').textContent = total;
+            
+            // Calculate severity counts
+            let highCount = 0, mediumCount = 0, lowCount = 0;
+            recent.forEach(blackmark => {
+                switch(blackmark.severity.toLowerCase()) {
+                    case 'high': highCount++; break;
+                    case 'medium': mediumCount++; break;
+                    case 'low': lowCount++; break;
+                }
+            });
+            
+            document.getElementById('high-severity').textContent = highCount;
+            document.getElementById('medium-severity').textContent = mediumCount;
+            document.getElementById('low-severity').textContent = lowCount;
+            
+            // Render behavior status
+            renderBehaviorStatus(total, highCount);
+            
+            // Render blackmarks list
+            renderBlackmarksList(recent);
+        }
+        
+        function renderBehaviorStatus(total, highCount) {
+            const statusContainer = document.getElementById('behavior-status');
+            
+            let status, statusClass, message, advice;
+            
+            if (total === 0) {
+                status = 'Excellent';
+                statusClass = 'status-excellent';
+                message = 'Outstanding behavior! You have no blackmarks.';
+                advice = 'Keep up the excellent work and continue being a role model for others.';
+            } else if (total <= 2 && highCount === 0) {
+                status = 'Good';
+                statusClass = 'status-good';
+                message = 'Generally good behavior with minor issues.';
+                advice = 'Focus on avoiding future incidents and maintaining good conduct.';
+            } else if (total <= 5 && highCount <= 1) {
+                status = 'Needs Improvement';
+                statusClass = 'status-warning';
+                message = 'Your behavior needs attention and improvement.';
+                advice = 'Please meet with your mentor to discuss improvement strategies.';
+            } else {
+                status = 'Critical';
+                statusClass = 'status-critical';
+                message = 'Serious behavioral concerns that require immediate attention.';
+                advice = 'Mandatory counseling session required. Contact your mentor immediately.';
+            }
+            
+            statusContainer.innerHTML = `
+                <div class="behavior-card ${statusClass}">
+                    <div class="behavior-header">
+                        <h4>Current Status: <span class="status-badge">${status}</span></h4>
+                    </div>
+                    <div class="behavior-message">
+                        <p><strong>Assessment:</strong> ${message}</p>
+                        <p><strong>Recommendation:</strong> ${advice}</p>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function renderBlackmarksList(blackmarks) {
+            const listContainer = document.getElementById('blackmarks-list');
+            
+            if (!blackmarks || blackmarks.length === 0) {
+                listContainer.innerHTML = `
+                    <div class="no-blackmarks">
+                        <i class="fas fa-check-circle"></i>
+                        <h3>No Blackmarks</h3>
+                        <p>Excellent! You have no blackmarks. Keep up the good behavior!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            listContainer.innerHTML = `
+                <div class="blackmarks-grid">
+                    ${blackmarks.map((blackmark, index) => `
+                        <div class="blackmark-card ${getSeverityClass(blackmark.severity)}">
+                            <div class="blackmark-header">
+                                <span class="blackmark-number">#${index + 1}</span>
+                                <span class="severity-badge ${getSeverityClass(blackmark.severity)}">
+                                    ${blackmark.severity} Severity
+                                </span>
+                            </div>
+                            <div class="blackmark-content">
+                                <h4>Reason</h4>
+                                <p>${blackmark.reason}</p>
+                                <div class="blackmark-meta">
+                                    <span><i class="fas fa-calendar"></i> ${new Date(blackmark.assignedAt).toLocaleDateString()}</span>
+                                    <span><i class="fas fa-user"></i> Assigned by Mentor</span>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+        
+        function renderEmptyState() {
+            document.getElementById('blackmarks-list').innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <h3>Unable to Load Data</h3>
+                    <p>There was an error loading your blackmarks data. Please try refreshing the page.</p>
+                    <button onclick="loadBlackmarksData()" class="btn btn-primary">
+                        <i class="fas fa-refresh"></i>
+                        Retry
+                    </button>
+                </div>
+            `;
+        }
+        
+        function getSeverityClass(severity) {
+            switch(severity.toLowerCase()) {
+                case 'high': return 'severity-high';
+                case 'medium': return 'severity-medium';
+                case 'low': return 'severity-low';
+                default: return 'severity-medium';
+            }
+        }
+        
+        // Logout function
+        function logout() {
+            localStorage.removeItem('smart_mentor_token');
+            localStorage.removeItem('smart_mentor_user');
+            showToast('Logged out successfully', 'success');
+            setTimeout(() => {
+                window.location.href = '../landing.html';
+            }, 1000);
+        }
+        
+        // Toast function
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            const icon = type === 'success' ? 'fas fa-check-circle' : 
+                        type === 'error' ? 'fas fa-exclamation-circle' : 
+                        'fas fa-info-circle';
+            
+            toast.innerHTML = `
+                <i class="${icon}"></i>
+                <span>${message}</span>
+            `;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.transform = 'translateX(0)';
+            }, 100);
+            
+            setTimeout(() => {
+                toast.style.transform = 'translateX(100%)';
+                toast.style.opacity = '0';
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        toast.parentNode.removeChild(toast);
+                    }
+                }, 300);
+            }, 5000);
+        }
+        
+        // Load data on page load
+        window.addEventListener('load', loadBlackmarksData);
+    </script>
+    
+    <style>
+        .modern-dashboard {
+            display: flex;
+            min-height: 100vh;
+            background: #f8fafc;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background: #2d3748;
+            color: white;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #4a5568;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+        
+        .logo i {
+            color: #667eea;
+            font-size: 1.5rem;
+        }
+        
+        .sidebar-nav {
+            padding: 1rem 0;
+        }
+        
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            color: #cbd5e0;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        
+        .nav-link:hover {
+            background: #4a5568;
+            color: white;
+        }
+        
+        .nav-link.active {
+            background: #667eea;
+            color: white;
+        }
+        
+        .main-content {
+            margin-left: 250px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .top-header {
+            background: white;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header-left h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin: 0;
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: #667eea;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .dashboard-content-area {
+            padding: 2rem;
+            flex: 1;
+        }
+        
+        .welcome-section {
+            margin-bottom: 2rem;
+        }
+        
+        .welcome-section h2 {
+            font-size: 1.75rem;
+            color: #2d3748;
+            margin: 0 0 0.5rem 0;
+        }
+        
+        .welcome-section p {
+            color: #718096;
+            margin: 0;
+        }
+        
+        .logout-btn {
+            background: #e53e3e;
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .logout-btn:hover {
+            background: #c53030;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-value.text-error {
+            color: #e53e3e;
+        }
+        
+        .stat-label {
+            color: #718096;
+            font-size: 0.875rem;
+        }
+        
+        .info-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .card-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .card-header h3 {
+            margin: 0;
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #2d3748;
+        }
+        
+        .card-content {
+            padding: 1.5rem;
+        }
+        
+        .behavior-card {
+            border-radius: 12px;
+            padding: 1.5rem;
+            border-left: 4px solid;
+        }
+        
+        .behavior-card.status-excellent {
+            background: rgba(72, 187, 120, 0.1);
+            border-color: #38a169;
+        }
+        
+        .behavior-card.status-good {
+            background: rgba(102, 126, 234, 0.1);
+            border-color: #667eea;
+        }
+        
+        .behavior-card.status-warning {
+            background: rgba(237, 137, 54, 0.1);
+            border-color: #ed8936;
+        }
+        
+        .behavior-card.status-critical {
+            background: rgba(245, 101, 101, 0.1);
+            border-color: #e53e3e;
+        }
+        
+        .status-badge {
+            font-weight: 600;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+        }
+        
+        .status-excellent .status-badge { background: #38a169; color: white; }
+        .status-good .status-badge { background: #667eea; color: white; }
+        .status-warning .status-badge { background: #ed8936; color: white; }
+        .status-critical .status-badge { background: #e53e3e; color: white; }
+        
+        .no-blackmarks {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: #38a169;
+        }
+        
+        .no-blackmarks i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .no-blackmarks h3 {
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+        }
+        
+        .no-blackmarks p {
+            color: #718096;
+        }
+        
+        .blackmarks-grid {
+            display: grid;
+            gap: 1rem;
+        }
+        
+        .blackmark-card {
+            border-radius: 12px;
+            padding: 1rem;
+            border-left: 4px solid;
+            background: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .blackmark-card.severity-high {
+            border-color: #e53e3e;
+            background: rgba(245, 101, 101, 0.05);
+        }
+        
+        .blackmark-card.severity-medium {
+            border-color: #ed8936;
+            background: rgba(237, 137, 54, 0.05);
+        }
+        
+        .blackmark-card.severity-low {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.05);
+        }
+        
+        .blackmark-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .blackmark-number {
+            font-weight: 700;
+            color: #4a5568;
+        }
+        
+        .severity-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .severity-badge.severity-high {
+            background: #e53e3e;
+            color: white;
+        }
+        
+        .severity-badge.severity-medium {
+            background: #ed8936;
+            color: white;
+        }
+        
+        .severity-badge.severity-low {
+            background: #667eea;
+            color: white;
+        }
+        
+        .blackmark-content h4 {
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+        }
+        
+        .blackmark-content p {
+            color: #718096;
+            margin-bottom: 1rem;
+        }
+        
+        .blackmark-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.875rem;
+            color: #a0aec0;
+        }
+        
+        .blackmark-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .tip-item {
+            padding: 1rem;
+            background: #f7fafc;
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .tip-item i {
+            font-size: 2rem;
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+        
+        .tip-item h4 {
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+        }
+        
+        .tip-item p {
+            color: #718096;
+            font-size: 0.875rem;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .blackmark-header {
+                flex-direction: column;
+                gap: 0.5rem;
+                align-items: flex-start;
+            }
+            
+            .blackmark-meta {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .tips-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</body>
+</html>

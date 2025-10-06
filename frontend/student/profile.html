@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Profile - Smart Mentor</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="modern-dashboard">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Smart Mentor</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-link">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="profile.html" class="nav-link active">
+                    <i class="fas fa-user"></i>
+                    <span>Profile</span>
+                </a>
+                <a href="academics.html" class="nav-link">
+                    <i class="fas fa-book"></i>
+                    <span>Academics</span>
+                </a>
+                <a href="attendance.html" class="nav-link">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>Attendance</span>
+                </a>
+                <a href="blackmarks.html" class="nav-link">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>Blackmarks</span>
+                </a>
+                <a href="ai-feedback.html" class="nav-link">
+                    <i class="fas fa-robot"></i>
+                    <span>AI Feedback</span>
+                </a>
+                <a href="messages.html" class="nav-link">
+                    <i class="fas fa-comments"></i>
+                    <span>Messages</span>
+                </a>
+                <a href="settings.html" class="nav-link">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Top Header -->
+            <header class="top-header">
+                <div class="header-left">
+                    <h1>Student Profile</h1>
+                </div>
+                <div class="header-right">
+                    <div class="user-profile">
+                        <span id="user-email">student@email.com</span>
+                        <div class="user-avatar">
+                            <span id="user-initial">S</span>
+                        </div>
+                        <button onclick="logout()" class="logout-btn">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </button>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Profile Content -->
+            <div class="dashboard-content-area">
+                <!-- Welcome Section -->
+                <div class="welcome-section">
+                    <h2>Student Profile</h2>
+                    <p>Manage your personal, contact, and academic information.</p>
+                </div>
+                
+                <div class="profile-card">
+                    <div class="profile-header">
+                        <h3><i class="fas fa-user"></i> Profile Information</h3>
+                        <button class="btn btn-primary" onclick="toggleEditMode()">
+                            <i class="fas fa-edit"></i>
+                            <span id="edit-btn-text">Edit Profile</span>
+                        </button>
+                    </div>
+                    
+                    <form id="profile-form">
+                        <!-- Personal Information -->
+                        <div class="form-section">
+                            <h3 class="form-section-title">Personal Information</h3>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="student-name">Full Name</label>
+                                    <input type="text" id="student-name" name="name" disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label for="student-regNo">Registration Number</label>
+                                    <input type="text" id="student-regNo" name="regNo" disabled>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="student-dob">Date of Birth</label>
+                                    <input type="date" id="student-dob" name="dateOfBirth" disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label for="student-gender">Gender</label>
+                                    <select id="student-gender" name="gender" disabled>
+                                        <option value="">Select Gender</option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Contact Information -->
+                        <div class="form-section">
+                            <h3 class="form-section-title">Contact Information</h3>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="student-mobile">Mobile Number</label>
+                                    <input type="tel" id="student-mobile" name="mobile" disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label for="student-email">Email Address</label>
+                                    <input type="email" id="student-email" name="email" disabled>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="student-address">Address</label>
+                                <textarea id="student-address" name="address" rows="3" disabled></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Parent Information -->
+                        <div class="form-section">
+                            <h3 class="form-section-title">Parent Information</h3>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="student-fatherName">Father's Name</label>
+                                    <input type="text" id="student-fatherName" name="fatherName" disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label for="student-fatherOccupation">Father's Occupation</label>
+                                    <input type="text" id="student-fatherOccupation" name="fatherOccupation" disabled>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="student-motherName">Mother's Name</label>
+                                    <input type="text" id="student-motherName" name="motherName" disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label for="student-motherOccupation">Mother's Occupation</label>
+                                    <input type="text" id="student-motherOccupation" name="motherOccupation" disabled>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <!-- Save Button (hidden by default) -->
+                        <div id="save-section" style="display: none;">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i>
+                                Save Changes
+                            </button>
+                            <button type="button" class="btn btn-secondary" onclick="cancelEdit()">
+                                <i class="fas fa-times"></i>
+                                Cancel
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/api.js"></script>
+    <script>
+        let isEditMode = false;
+        let originalData = {};
+
+        // Check authentication
+        const token = localStorage.getItem('smart_mentor_token');
+        const user = localStorage.getItem('smart_mentor_user');
+        
+        if (!token || !user) {
+            window.location.href = '../landing.html';
+        }
+        
+        const currentUser = JSON.parse(user);
+        
+        // Update user info
+        document.getElementById('user-email').textContent = currentUser.email;
+        document.getElementById('user-initial').textContent = currentUser.email.charAt(0).toUpperCase();
+        
+        // Load profile data
+        async function loadProfileData() {
+            try {
+                const response = await API.getStudentDashboard();
+                
+                if (response.success) {
+                    const data = response.data;
+                    originalData = data;
+                    
+                    // Populate form fields
+                    document.getElementById('student-name').value = data.personalInfo?.name || '';
+                    document.getElementById('student-regNo').value = data.personalInfo?.regNo || '';
+                    document.getElementById('student-dob').value = data.personalInfo?.dateOfBirth ? new Date(data.personalInfo.dateOfBirth).toISOString().split('T')[0] : '';
+                    document.getElementById('student-gender').value = data.personalInfo?.gender || '';
+                    
+                    document.getElementById('student-mobile').value = data.contactInfo?.mobile || '';
+                    document.getElementById('student-email').value = currentUser.email;
+                    document.getElementById('student-address').value = data.contactInfo?.address || '';
+                    
+                    document.getElementById('student-fatherName').value = data.parentInfo?.fatherName || '';
+                    document.getElementById('student-fatherOccupation').value = data.parentInfo?.fatherOccupation || '';
+                    document.getElementById('student-motherName').value = data.parentInfo?.motherName || '';
+                    document.getElementById('student-motherOccupation').value = data.parentInfo?.motherOccupation || '';
+                } else {
+                    showToast('Error loading profile data', 'error');
+                }
+            } catch (error) {
+                console.error('Error loading profile:', error);
+                showToast('Error loading profile data', 'error');
+            }
+        }
+        
+        // Toggle edit mode
+        function toggleEditMode() {
+            isEditMode = !isEditMode;
+            const inputs = document.querySelectorAll('#profile-form input, #profile-form select, #profile-form textarea');
+            const editBtn = document.getElementById('edit-btn-text');
+            const saveSection = document.getElementById('save-section');
+            
+            inputs.forEach(input => {
+                if (input.name !== 'email' && input.name !== 'regNo') { // Keep email and regNo readonly
+                    input.disabled = !isEditMode;
+                }
+            });
+            
+            if (isEditMode) {
+                editBtn.textContent = 'Cancel Edit';
+                saveSection.style.display = 'block';
+            } else {
+                editBtn.textContent = 'Edit Profile';
+                saveSection.style.display = 'none';
+                // Restore original data
+                loadProfileData();
+            }
+        }
+        
+        // Cancel edit
+        function cancelEdit() {
+            toggleEditMode();
+        }
+        
+        // Handle form submission
+        document.getElementById('profile-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const profileData = {
+                personalInfo: {
+                    name: formData.get('name'),
+                    regNo: formData.get('regNo'),
+                    dateOfBirth: formData.get('dateOfBirth'),
+                    gender: formData.get('gender')
+                },
+                contactInfo: {
+                    mobile: formData.get('mobile'),
+                    address: formData.get('address')
+                },
+                parentInfo: {
+                    fatherName: formData.get('fatherName'),
+                    fatherOccupation: formData.get('fatherOccupation'),
+                    motherName: formData.get('motherName'),
+                    motherOccupation: formData.get('motherOccupation')
+                }
+            };
+            
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+            
+            try {
+                const response = await API.updateStudentProfile(profileData);
+                
+                if (response.success) {
+                    showToast('Profile updated successfully!', 'success');
+                    toggleEditMode();
+                } else {
+                    showToast(response.message || 'Failed to update profile', 'error');
+                }
+            } catch (error) {
+                console.error('Error updating profile:', error);
+                showToast('Error updating profile', 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-save"></i> Save Changes';
+            }
+        });
+        
+        // Logout function
+        function logout() {
+            localStorage.removeItem('smart_mentor_token');
+            localStorage.removeItem('smart_mentor_user');
+            showToast('Logged out successfully', 'success');
+            setTimeout(() => {
+                window.location.href = '../landing.html';
+            }, 1000);
+        }
+        
+        // Toast function
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            const icon = type === 'success' ? 'fas fa-check-circle' : 
+                        type === 'error' ? 'fas fa-exclamation-circle' : 
+                        'fas fa-info-circle';
+            
+            toast.innerHTML = `
+                <i class="${icon}"></i>
+                <span>${message}</span>
+            `;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.transform = 'translateX(0)';
+            }, 100);
+            
+            setTimeout(() => {
+                toast.style.transform = 'translateX(100%)';
+                toast.style.opacity = '0';
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        toast.parentNode.removeChild(toast);
+                    }
+                }, 300);
+            }, 5000);
+        }
+        
+        // Load data on page load
+        window.addEventListener('load', loadProfileData);
+    </script>
+    
+    <style>
+        .modern-dashboard {
+            display: flex;
+            min-height: 100vh;
+            background: #f8fafc;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background: #2d3748;
+            color: white;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #4a5568;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+        
+        .logo i {
+            color: #667eea;
+            font-size: 1.5rem;
+        }
+        
+        .sidebar-nav {
+            padding: 1rem 0;
+        }
+        
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            color: #cbd5e0;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        
+        .nav-link:hover {
+            background: #4a5568;
+            color: white;
+        }
+        
+        .nav-link.active {
+            background: #667eea;
+            color: white;
+        }
+        
+        .main-content {
+            margin-left: 250px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .top-header {
+            background: white;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header-left h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin: 0;
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: #667eea;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .dashboard-content-area {
+            padding: 2rem;
+            flex: 1;
+        }
+        
+        .welcome-section {
+            margin-bottom: 2rem;
+        }
+        
+        .welcome-section h2 {
+            font-size: 1.75rem;
+            color: #2d3748;
+            margin: 0 0 0.5rem 0;
+        }
+        
+        .welcome-section p {
+            color: #718096;
+            margin: 0;
+        }
+        
+        .profile-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .profile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .profile-header h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .logout-btn {
+            background: #e53e3e;
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .logout-btn:hover {
+            background: #c53030;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+        }
+    </style>
+</body>
+</html>

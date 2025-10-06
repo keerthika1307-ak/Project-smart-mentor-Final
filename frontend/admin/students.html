@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Students Management - Smart Mentor</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="modern-dashboard">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Smart Mentor</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-link">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="students.html" class="nav-link active">
+                    <i class="fas fa-users"></i>
+                    <span>Students</span>
+                </a>
+                <a href="academics.html" class="nav-link">
+                    <i class="fas fa-book"></i>
+                    <span>Academics</span>
+                </a>
+                <a href="attendance.html" class="nav-link">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>Attendance</span>
+                </a>
+                <a href="feedback.html" class="nav-link">
+                    <i class="fas fa-comment-alt"></i>
+                    <span>Feedback</span>
+                </a>
+                <a href="messages.html" class="nav-link">
+                    <i class="fas fa-envelope"></i>
+                    <span>Messages</span>
+                </a>
+                <a href="blackmarks.html" class="nav-link">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>Blackmarks</span>
+                </a>
+                <a href="admin-management.html" class="nav-link">
+                    <i class="fas fa-user-shield"></i>
+                    <span>Admin Management</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Top Header -->
+            <header class="top-header">
+                <div class="header-left">
+                    <h1>Students Management</h1>
+                </div>
+                <div class="header-right">
+                    <div class="user-profile">
+                        <span id="user-email">thomas@gmail.com</span>
+                        <div class="user-avatar">
+                            <span id="user-initial">T</span>
+                        </div>
+                        <button onclick="logout()" class="logout-btn">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </button>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Students Content -->
+            <div class="dashboard-content-area">
+                <!-- Search and Filter Section -->
+                <div class="search-section">
+                    <div class="search-bar">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="student-search" placeholder="Search by name, email, or registration number..." onkeyup="searchStudents(this.value)">
+                    </div>
+                    <button class="btn btn-primary" onclick="addNewStudent()">
+                        <i class="fas fa-user-plus"></i>
+                        Add New Student
+                    </button>
+                </div>
+                
+                <!-- Students Table -->
+                <div class="students-table-container">
+                    <table class="students-table">
+                        <thead>
+                            <tr>
+                                <th>Student Info</th>
+                                <th>Contact</th>
+                                <th>Academic</th>
+                                <th>Attendance</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="students-table-body">
+                            <tr>
+                                <td colspan="6" class="loading-cell">
+                                    <div class="loading">Loading students...</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/api.js"></script>
+    <script>
+        // Check authentication
+        const token = localStorage.getItem('smart_mentor_token');
+        const user = localStorage.getItem('smart_mentor_user');
+        
+        if (!token || !user) {
+            window.location.href = '../landing.html';
+        }
+        
+        const currentUser = JSON.parse(user);
+        
+        // Check if user is admin or mentor
+        if (currentUser.role !== 'admin' && currentUser.role !== 'mentor') {
+            window.location.href = '../landing.html';
+        }
+        
+        // Update user info
+        const userName = currentUser.email.split('@')[0];
+        const userInitial = userName.charAt(0).toUpperCase();
+        
+        document.getElementById('user-email').textContent = currentUser.email;
+        document.getElementById('user-initial').textContent = userInitial;
+        
+        // Sample student data (in real app, this would come from API)
+        let studentsData = [];
+        let filteredStudents = [];
+        
+        // Load students data from API
+        async function loadStudents() {
+            try {
+                const response = await API.getAllStudents();
+                if (response.success) {
+                    studentsData = response.data.students.map(student => ({
+                        id: student._id,
+                        name: student.name || 'No Name',
+                        regNo: student.regNo || 'No Reg No',
+                        email: student.email || 'N/A',
+                        mobile: student.mobile || 'N/A',
+                        cgpa: student.cgpa || 0,
+                        attendance: student.attendance || 0,
+                        blackmarks: student.blackmarks || 0,
+                        status: student.profileCompleted ? 'Active' : 'Incomplete',
+                        department: 'Computer Science Engineering',
+                        batch: '2023-2027'
+                    }));
+                    filteredStudents = [...studentsData];
+                    renderStudentsTable(filteredStudents);
+                } else {
+                    showToast('Error loading students', 'error');
+                }
+            } catch (error) {
+                console.error('Error loading students:', error);
+                showToast('Error loading students: ' + error.message, 'error');
+            }
+        }
+        
+        function renderStudentsTable(students) {
+            const tableBody = document.getElementById('students-table-body');
+            
+            if (students.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="no-data">
+                            <div class="no-students">
+                                <i class="fas fa-users"></i>
+                                <h3>No Students Found</h3>
+                                <p>No students match your search criteria.</p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tableBody.innerHTML = students.map(student => `
+                <tr>
+                    <td>
+                        <div class="student-info">
+                            <div class="student-avatar">
+                                ${student.name.charAt(0)}
+                            </div>
+                            <div class="student-details">
+                                <h4>${student.name}</h4>
+                                <p>${student.regNo}</p>
+                                <small>${student.department}</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="contact-info">
+                            <p><i class="fas fa-envelope"></i> ${student.email}</p>
+                            <p><i class="fas fa-phone"></i> ${student.mobile}</p>
+                            <p><i class="fas fa-map-marker-alt"></i> ${student.address}</p>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="academic-info">
+                            <div class="cgpa-badge ${getCGPAClass(student.cgpa)}">
+                                CGPA: ${student.cgpa}
+                            </div>
+                            <small>Batch: ${student.batch}</small>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="attendance-info">
+                            <div class="attendance-badge ${getAttendanceClass(student.attendance)}">
+                                ${student.attendance}%
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="status-info">
+                            <span class="status-badge ${student.status.toLowerCase()}">${student.status}</span>
+                            ${student.blackmarks > 0 ? `<span class="blackmarks-badge">${student.blackmarks} Blackmark${student.blackmarks > 1 ? 's' : ''}</span>` : ''}
+                        </div>
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-action view" onclick="viewStudent('${student.id}')" title="View Details">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn-action edit" onclick="editStudent('${student.id}')" title="Edit Student">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn-action delete" onclick="deleteStudent('${student.id}')" title="Delete Student">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        function getCGPAClass(cgpa) {
+            if (cgpa >= 8.5) return 'excellent';
+            if (cgpa >= 7.0) return 'good';
+            if (cgpa >= 6.0) return 'average';
+            return 'poor';
+        }
+        
+        function getAttendanceClass(attendance) {
+            if (attendance >= 90) return 'excellent';
+            if (attendance >= 75) return 'good';
+            if (attendance >= 60) return 'average';
+            return 'poor';
+        }
+        
+        function searchStudents(query) {
+            if (!query.trim()) {
+                filteredStudents = [...studentsData];
+            } else {
+                const searchTerm = query.toLowerCase();
+                filteredStudents = studentsData.filter(student => 
+                    student.name.toLowerCase().includes(searchTerm) ||
+                    student.regNo.toLowerCase().includes(searchTerm) ||
+                    student.email.toLowerCase().includes(searchTerm) ||
+                    student.mobile.includes(searchTerm)
+                );
+            }
+            renderStudentsTable(filteredStudents);
+        }
+        
+        function addNewStudent() {
+            showStudentRegistrationModal();
+        }
+
+        function showStudentRegistrationModal() {
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>Add New Student</h3>
+                        <button class="modal-close" onclick="closeModal()">&times;</button>
+                    </div>
+                    <form id="student-registration-form" class="modal-form">
+                        <div class="form-section">
+                            <h4>Account Information</h4>
+                            <div class="form-group">
+                                <label for="student-email">Email Address *</label>
+                                <input type="email" id="student-email" name="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="student-password">Password *</label>
+                                <input type="password" id="student-password" name="password" required minlength="6">
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h4>Personal Information</h4>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="student-name">Full Name *</label>
+                                    <input type="text" id="student-name" name="name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="student-regno">Registration Number *</label>
+                                    <input type="text" id="student-regno" name="regNo" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="student-dob">Date of Birth</label>
+                                    <input type="date" id="student-dob" name="dateOfBirth">
+                                </div>
+                                <div class="form-group">
+                                    <label for="student-gender">Gender</label>
+                                    <select id="student-gender" name="gender">
+                                        <option value="">Select Gender</option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h4>Contact Information</h4>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="student-mobile">Mobile Number *</label>
+                                    <input type="tel" id="student-mobile" name="mobile" required minlength="10">
+                                </div>
+                                <div class="form-group">
+                                    <label for="student-address">Address</label>
+                                    <input type="text" id="student-address" name="address">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h4>Parent Information</h4>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="father-name">Father's Name</label>
+                                    <input type="text" id="father-name" name="fatherName">
+                                </div>
+                                <div class="form-group">
+                                    <label for="father-occupation">Father's Occupation</label>
+                                    <input type="text" id="father-occupation" name="fatherOccupation">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="mother-name">Mother's Name</label>
+                                    <input type="text" id="mother-name" name="motherName">
+                                </div>
+                                <div class="form-group">
+                                    <label for="mother-occupation">Mother's Occupation</label>
+                                    <input type="text" id="mother-occupation" name="motherOccupation">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-user-plus"></i>
+                                Add Student
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // Handle form submission
+            document.getElementById('student-registration-form').addEventListener('submit', handleStudentRegistration);
+        }
+
+        async function handleStudentRegistration(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            
+            // Prepare data in the format expected by the API
+            const studentData = {
+                email: formData.get('email'),
+                password: formData.get('password'),
+                personalInfo: {
+                    name: formData.get('name'),
+                    regNo: formData.get('regNo'),
+                    dateOfBirth: formData.get('dateOfBirth') || undefined,
+                    gender: formData.get('gender') || undefined
+                },
+                contactInfo: {
+                    mobile: formData.get('mobile'),
+                    address: formData.get('address') || undefined
+                },
+                parentInfo: {
+                    fatherName: formData.get('fatherName') || undefined,
+                    fatherOccupation: formData.get('fatherOccupation') || undefined,
+                    motherName: formData.get('motherName') || undefined,
+                    motherOccupation: formData.get('motherOccupation') || undefined
+                }
+            };
+
+            // Show loading state
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating Student...';
+
+            try {
+                console.log('Creating student:', studentData);
+                const response = await API.createStudent(studentData);
+                
+                if (response.success) {
+                    showToast(`✅ Student ${studentData.personalInfo.name} created successfully!`, 'success');
+                    closeModal();
+                    loadStudents(); // Refresh the students list
+                } else {
+                    showToast('Error creating student: ' + (response.message || 'Unknown error'), 'error');
+                }
+            } catch (error) {
+                console.error('Error creating student:', error);
+                showToast('Error creating student: ' + error.message, 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-user-plus"></i> Add Student';
+            }
+        }
+
+        function closeModal() {
+            const modal = document.querySelector('.modal-overlay');
+            if (modal) {
+                modal.remove();
+            }
+        }
+        
+        function viewStudent(studentId) {
+            const student = studentsData.find(s => s.id === studentId);
+            if (student) {
+                showToast(`Viewing details for ${student.name}`, 'info');
+                // In real app, this would open a modal or redirect to student details page
+            }
+        }
+        
+        function editStudent(studentId) {
+            const student = studentsData.find(s => s.id === studentId);
+            if (student) {
+                showToast(`Editing ${student.name}`, 'info');
+                // In real app, this would open edit form
+            }
+        }
+        
+        async function deleteStudent(studentId) {
+            const student = studentsData.find(s => s.id === studentId);
+            if (student && confirm(`Are you sure you want to delete ${student.name}?`)) {
+                try {
+                    const response = await API.deleteStudent(studentId);
+                    if (response.success) {
+                        showToast(`${student.name} deleted successfully`, 'success');
+                        // Reload the students list
+                        await loadStudents();
+                    } else {
+                        showToast('Error deleting student', 'error');
+                    }
+                } catch (error) {
+                    console.error('Error deleting student:', error);
+                    showToast('Error deleting student: ' + error.message, 'error');
+                }
+            }
+        }
+        
+        // Logout function
+        function logout() {
+            localStorage.removeItem('smart_mentor_token');
+            localStorage.removeItem('smart_mentor_user');
+            showToast('Logged out successfully', 'success');
+            setTimeout(() => {
+                window.location.href = '../landing.html';
+            }, 1000);
+        }
+        
+        // Toast function
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            const icon = type === 'success' ? 'fas fa-check-circle' : 
+                        type === 'error' ? 'fas fa-exclamation-circle' : 
+                        'fas fa-info-circle';
+            
+            toast.innerHTML = `
+                <i class="${icon}"></i>
+                <span>${message}</span>
+            `;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.transform = 'translateX(0)';
+            }, 100);
+            
+            setTimeout(() => {
+                toast.style.transform = 'translateX(100%)';
+                toast.style.opacity = '0';
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        toast.parentNode.removeChild(toast);
+                    }
+                }, 300);
+            }, 5000);
+        }
+        
+        // Load students on page load
+        window.addEventListener('load', loadStudents);
+    </script>
+    
+    <style>
+        /* Include the same modern dashboard styles */
+        .modern-dashboard {
+            display: flex;
+            min-height: 100vh;
+            background: #f8fafc;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background: #2d3748;
+            color: white;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #4a5568;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+        
+        .logo i {
+            color: #667eea;
+            font-size: 1.5rem;
+        }
+        
+        .sidebar-nav {
+            padding: 1rem 0;
+        }
+        
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            color: #cbd5e0;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        
+        .nav-link:hover {
+            background: #4a5568;
+            color: white;
+        }
+        
+        .nav-link.active {
+            background: #667eea;
+            color: white;
+        }
+        
+        .main-content {
+            margin-left: 250px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .top-header {
+            background: white;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header-left h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin: 0;
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: #667eea;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .dashboard-content-area {
+            padding: 2rem;
+            flex: 1;
+        }
+        
+        .search-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            gap: 1rem;
+        }
+        
+        .search-bar {
+            position: relative;
+            flex: 1;
+            max-width: 400px;
+        }
+        
+        .search-bar i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #718096;
+        }
+        
+        .search-bar input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 0.875rem;
+        }
+        
+        .search-bar input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+        
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #5a67d8;
+        }
+        
+        .students-table-container {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .students-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .students-table th {
+            background: #f7fafc;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: #2d3748;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .students-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: top;
+        }
+        
+        .students-table tr:hover {
+            background: #f7fafc;
+        }
+        
+        .student-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .student-avatar {
+            width: 50px;
+            height: 50px;
+            background: #667eea;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 1.25rem;
+        }
+        
+        .student-details h4 {
+            margin: 0 0 0.25rem 0;
+            color: #2d3748;
+            font-size: 1rem;
+        }
+        
+        .student-details p {
+            margin: 0 0 0.25rem 0;
+            color: #667eea;
+            font-weight: 500;
+        }
+        
+        .student-details small {
+            color: #718096;
+            font-size: 0.75rem;
+        }
+        
+        .contact-info p {
+            margin: 0 0 0.5rem 0;
+            font-size: 0.875rem;
+            color: #4a5568;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .contact-info i {
+            width: 16px;
+            color: #718096;
+        }
+        
+        .cgpa-badge, .attendance-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .cgpa-badge.excellent, .attendance-badge.excellent {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+        
+        .cgpa-badge.good, .attendance-badge.good {
+            background: #bee3f8;
+            color: #2a4365;
+        }
+        
+        .cgpa-badge.average, .attendance-badge.average {
+            background: #faf089;
+            color: #744210;
+        }
+        
+        .cgpa-badge.poor, .attendance-badge.poor {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .status-badge.active {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+        
+        .blackmarks-badge {
+            display: block;
+            margin-top: 0.25rem;
+            padding: 0.25rem 0.5rem;
+            background: #fed7d7;
+            color: #742a2a;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .btn-action {
+            width: 32px;
+            height: 32px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        
+        .btn-action.view {
+            background: #bee3f8;
+            color: #2a4365;
+        }
+        
+        .btn-action.edit {
+            background: #faf089;
+            color: #744210;
+        }
+        
+        .btn-action.delete {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+        
+        .btn-action:hover {
+            transform: scale(1.1);
+        }
+        
+        .loading-cell, .no-data {
+            text-align: center;
+            padding: 3rem;
+        }
+        
+        .no-students {
+            color: #718096;
+        }
+        
+        .no-students i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #cbd5e0;
+        }
+        
+        .no-students h3 {
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+        }
+        
+        .logout-btn {
+            background: #e53e3e;
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .logout-btn:hover {
+            background: #c53030;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); }
+            .main-content { margin-left: 0; }
+            .form-row { grid-template-columns: 1fr; }
+            .overview-cards { grid-template-columns: 1fr; }
+            .search-bar {
+                max-width: none;
+            }
+            
+            .students-table {
+                font-size: 0.875rem;
+            }
+            
+            .students-table th,
+            .students-table td {
+                padding: 0.75rem 0.5rem;
+            }
+            
+            .student-info {
+                flex-direction: column;
+                text-align: center;
+                gap: 0.5rem;
+            }
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            color: #2d3748;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #718096;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+
+        .modal-close:hover {
+            background: #f7fafc;
+            color: #2d3748;
+        }
+
+        .modal-form {
+            padding: 1.5rem;
+        }
+
+        .form-section {
+            margin-bottom: 2rem;
+        }
+
+        .form-section h4 {
+            margin: 0 0 1rem 0;
+            color: #2d3748;
+            font-size: 1rem;
+            font-weight: 600;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #4a5568;
+            font-weight: 500;
+            font-size: 0.875rem;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e2e8f0;
+            margin-top: 2rem;
+        }

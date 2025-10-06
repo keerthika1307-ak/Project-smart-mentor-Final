@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Management - Smart Mentor</title>
+    <link rel="stylesheet" href="../css/styles.css?v=2.0">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+</head>
+<body>
+    <div class="modern-dashboard">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Smart Mentor</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-link">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="students.html" class="nav-link">
+                    <i class="fas fa-users"></i>
+                    <span>Students</span>
+                </a>
+                <a href="academics.html" class="nav-link">
+                    <i class="fas fa-book"></i>
+                    <span>Academics</span>
+                </a>
+                <a href="attendance.html" class="nav-link active">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>Attendance</span>
+                </a>
+                <a href="feedback.html" class="nav-link">
+                    <i class="fas fa-comment-alt"></i>
+                    <span>Feedback</span>
+                </a>
+                <a href="messages.html" class="nav-link">
+                    <i class="fas fa-envelope"></i>
+                    <span>Messages</span>
+                </a>
+                <a href="blackmarks.html" class="nav-link">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>Blackmarks</span>
+                </a>
+                <a href="notifications.html" class="nav-link">
+                    <i class="fas fa-bell"></i>
+                    <span>Notifications</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Top Header -->
+            <header class="top-header">
+                <div class="header-left">
+                    <h1>Attendance Management</h1>
+                </div>
+                <div class="header-right">
+                    <div class="user-profile">
+                        <span id="user-email">admin@smartmentor.com</span>
+                        <div class="user-avatar">
+                            <span id="user-initial">A</span>
+                        </div>
+                        <button onclick="logout()" class="logout-btn">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </button>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Attendance Content -->
+            <div class="dashboard-content-area">
+                <!-- Record Attendance Section -->
+                <div class="action-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-calendar-plus"></i> Record Attendance</h2>
+                    </div>
+                    
+                    <form id="attendance-form" class="attendance-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="student-select">Select Student</label>
+                                <select id="student-select" required>
+                                    <option value="">Choose a student...</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="attendance-month">Month</label>
+                                <select id="attendance-month" required>
+                                    <option value="">Select month...</option>
+                                    <option value="January">January</option>
+                                    <option value="February">February</option>
+                                    <option value="March">March</option>
+                                    <option value="April">April</option>
+                                    <option value="May">May</option>
+                                    <option value="June">June</option>
+                                    <option value="July">July</option>
+                                    <option value="August">August</option>
+                                    <option value="September">September</option>
+                                    <option value="October">October</option>
+                                    <option value="November">November</option>
+                                    <option value="December">December</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="attendance-year">Year</label>
+                                <select id="attendance-year" required>
+                                    <option value="">Select year...</option>
+                                    <option value="2024">2024</option>
+                                    <option value="2025">2025</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="days-present">Days Present</label>
+                                <input type="number" id="days-present" min="0" max="31" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="total-days">Total Days</label>
+                                <input type="number" id="total-days" min="1" max="31" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Percentage</label>
+                                <div class="form-display" id="attendance-percentage">0%</div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i>
+                            Record Attendance
+                        </button>
+                    </form>
+                </div>
+                
+                <!-- Attendance Overview -->
+                <div class="overview-section">
+                    <h2><i class="fas fa-chart-bar"></i> Overview</h2>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon blue">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="stat-info">
+                                <div class="stat-number" id="total-students">0</div>
+                                <div class="stat-label">Total Students</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon green">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="stat-info">
+                                <div class="stat-number" id="good-attendance">0</div>
+                                <div class="stat-label">Good Attendance (≥75%)</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon orange">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <div class="stat-info">
+                                <div class="stat-number" id="low-attendance">0</div>
+                                <div class="stat-label">Low Attendance (<75%)</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon purple">
+                                <i class="fas fa-percentage"></i>
+                            </div>
+                            <div class="stat-info">
+                                <div class="stat-number" id="avg-attendance">0%</div>
+                                <div class="stat-label">Average Attendance</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Recent Attendance Records -->
+                <div class="records-section">
+                    <h2><i class="fas fa-history"></i> Recent Records</h2>
+                    <div id="attendance-records">
+                        <div class="loading">Loading attendance records...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/api.js"></script>
+    <script>
+        // Check authentication
+        const token = localStorage.getItem('smart_mentor_token');
+        const user = localStorage.getItem('smart_mentor_user');
+        
+        if (!token || !user) {
+            window.location.href = '../landing.html';
+        }
+        
+        const currentUser = JSON.parse(user);
+        
+        // Check if user is admin or mentor
+        if (currentUser.role !== 'admin' && currentUser.role !== 'mentor') {
+            window.location.href = '../landing.html';
+        }
+        
+        // Update user info
+        document.getElementById('user-email').textContent = currentUser.email;
+        document.getElementById('user-initial').textContent = currentUser.email.charAt(0).toUpperCase();
+        
+        // Load students for dropdown
+        async function loadStudents() {
+            try {
+                const response = await API.getAllStudentsUnpaginated();
+                if (response.success) {
+                    const studentSelect = document.getElementById('student-select');
+                    studentSelect.innerHTML = '<option value="">Choose a student...</option>';
+                    
+                    response.data.students.forEach(student => {
+                        const option = document.createElement('option');
+                        option.value = student._id;
+                        const name = student.name && student.name !== 'No Name' ? student.name : `Student ${student._id.slice(-4)}`;
+                        const regNo = student.regNo && student.regNo !== 'No Reg No' ? student.regNo : 'No Reg';
+                        option.textContent = `${name} (${regNo})`;
+                        studentSelect.appendChild(option);
+                    });
+                } else {
+                    console.error('Failed to load students:', response.message);
+                }
+            } catch (error) {
+                console.error('Error loading students:', error);
+            }
+        }
+        
+        // Calculate percentage
+        function calculatePercentage() {
+            const present = parseInt(document.getElementById('days-present').value) || 0;
+            const total = parseInt(document.getElementById('total-days').value) || 0;
+            const percentage = total > 0 ? Math.round((present / total) * 100) : 0;
+            document.getElementById('attendance-percentage').textContent = percentage + '%';
+        }
+        
+        // Add event listeners
+        document.getElementById('days-present').addEventListener('input', calculatePercentage);
+        document.getElementById('total-days').addEventListener('input', calculatePercentage);
+        
+        // Handle form submission
+        document.getElementById('attendance-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const studentId = document.getElementById('student-select').value;
+            const month = document.getElementById('attendance-month').value;
+            const year = parseInt(document.getElementById('attendance-year').value);
+            const daysPresent = parseInt(document.getElementById('days-present').value);
+            const totalDays = parseInt(document.getElementById('total-days').value);
+            
+            try {
+                const response = await API.addStudentAttendance(studentId, {
+                    month,
+                    year,
+                    daysPresent,
+                    totalDays
+                });
+                
+                if (response.success) {
+                    const studentName = document.getElementById('student-select').selectedOptions[0].textContent;
+                    const percentage = Math.round((daysPresent / totalDays) * 100);
+                    showToast(`Attendance recorded for ${studentName}: ${percentage}% (${month} ${year}). Email notification sent!`, 'success');
+                    document.getElementById('attendance-form').reset();
+                    document.getElementById('attendance-percentage').textContent = '0%';
+                    loadAttendanceOverview();
+                    loadAttendanceRecords(); // Load records after submission
+                }
+            } catch (error) {
+                showToast('Error recording attendance: ' + error.message, 'error');
+            }
+        });
+        
+        // Load attendance overview
+        async function loadAttendanceOverview() {
+            try {
+                const response = await API.getMentorDashboard();
+                if (response.success) {
+                    const data = response.data;
+                    document.getElementById('total-students').textContent = data.statistics.totalStudents || 0;
+                    document.getElementById('good-attendance').textContent = (data.statistics.totalStudents - data.alerts.lowAttendance) || 0;
+                    document.getElementById('low-attendance').textContent = data.alerts.lowAttendance || 0;
+                    document.getElementById('avg-attendance').textContent = data.statistics.averageAttendance + '%' || '0%';
+                }
+            } catch (error) {
+                console.error('Error loading attendance overview:', error);
+            }
+        }
+        
+        // Logout function
+        function logout() {
+            localStorage.removeItem('smart_mentor_token');
+            localStorage.removeItem('smart_mentor_user');
+            showToast('Logged out successfully', 'success');
+            setTimeout(() => {
+                window.location.href = '../landing.html';
+            }, 1000);
+        }
+        
+        // Toast function
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            const icon = type === 'success' ? 'fas fa-check-circle' : 
+                        type === 'error' ? 'fas fa-exclamation-circle' : 
+                        'fas fa-info-circle';
+            
+            toast.innerHTML = `
+                <i class="${icon}"></i>
+                <span>${message}</span>
+            `;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.transform = 'translateX(0)';
+            }, 100);
+            
+            setTimeout(() => {
+                toast.style.transform = 'translateX(100%)';
+                toast.style.opacity = '0';
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        toast.parentNode.removeChild(toast);
+                    }
+                }, 300);
+            }, 5000);
+        }
+        
+        // Load attendance records
+        async function loadAttendanceRecords() {
+            try {
+                const response = await API.getAllStudents();
+                if (response.success) {
+                    const students = response.data.students;
+                    const recordsContainer = document.getElementById('attendance-records');
+                    
+                    // Filter students who have attendance records (attendance > 0)
+                    const studentsWithAttendance = students.filter(student => 
+                        student.attendance !== undefined && student.attendance > 0
+                    );
+                    
+                    if (studentsWithAttendance.length === 0) {
+                        recordsContainer.innerHTML = `
+                            <div class="empty-state">
+                                <i class="fas fa-calendar-check"></i>
+                                <h3>No attendance records found</h3>
+                                <p>Record attendance for students to see them here</p>
+                            </div>
+                        `;
+                        return;
+                    }
+                    
+                    // Display attendance records sorted by attendance percentage
+                    const sortedStudents = studentsWithAttendance.sort((a, b) => b.attendance - a.attendance);
+                    
+                    recordsContainer.innerHTML = sortedStudents.map(student => `
+                        <div class="attendance-record-card">
+                            <div class="record-header">
+                                <h4>${student.name || 'Unknown Student'} (${student.regNo || 'No RegNo'})</h4>
+                                <span class="attendance-percentage ${student.attendance < 75 ? 'low' : 'good'}">
+                                    ${student.attendance}%
+                                </span>
+                            </div>
+                            <div class="record-details">
+                                <p><i class="fas fa-percentage"></i> Overall Attendance: ${student.attendance}%</p>
+                                <p><i class="fas fa-envelope"></i> Email: ${student.email}</p>
+                                <p><i class="fas fa-calendar"></i> Last updated: ${new Date().toLocaleDateString()}</p>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    document.getElementById('attendance-records').innerHTML = `
+                        <div class="error-message">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            Error loading attendance records: ${response.message || 'Unknown error'}
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error loading attendance records:', error);
+                document.getElementById('attendance-records').innerHTML = `
+                    <div class="error-message">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Error loading attendance records: ${error.message}
+                    </div>
+                `;
+            }
+        }
+        
+        // Remove unwanted titles function
+        function removeUnwantedTitles() {
+            const h1Elements = document.querySelectorAll('h1');
+            h1Elements.forEach(h1 => {
+                const text = h1.textContent || h1.innerText;
+                if (text.includes('Attendance Management') || 
+                    text.includes('Generate AI Feedback') ||
+                    text.includes('AI Feedback System') ||
+                    text.includes('Blackmarks Management') ||
+                    text.includes('Messages')) {
+                    h1.style.display = 'none';
+                    h1.remove();
+                }
+            });
+        }
+        
+        // Load data on page load
+        window.addEventListener('load', () => {
+            loadStudents();
+            loadAttendanceOverview();
+            loadAttendanceRecords();
+            
+            // Remove unwanted titles
+            setTimeout(removeUnwantedTitles, 100);
+            setInterval(removeUnwantedTitles, 1000);
+        });
+    </script>
+    
+    <style>
+        /* Modern Dashboard Layout */
+        .modern-dashboard {
+            display: flex;
+            min-height: 100vh;
+            background: #f7fafc;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background: white;
+            box-shadow: 2px 0 4px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+        
+        .sidebar-nav {
+            flex: 1;
+            padding: 1rem 0;
+        }
+        
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            color: #4a5568;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        
+        .nav-link:hover {
+            background: #f7fafc;
+            color: #667eea;
+        }
+        
+        .nav-link.active {
+            background: #667eea;
+            color: white;
+        }
+        
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .top-header {
+            background: white;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header-left h1 {
+            font-size: 1.5rem;
+            color: #2d3748;
+            margin: 0;
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #667eea;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .logout-btn {
+            background: #f56565;
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .logout-btn:hover {
+            background: #e53e3e;
+        }
+        
+        .dashboard-content-area {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+        
+        .action-section {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .section-header h2 {
+            margin: 0 0 1.5rem 0;
+            color: #2d3748;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .attendance-form .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #374151;
+        }
+        
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 0.875rem;
+        }
+        
+        .form-display {
+            padding: 0.75rem;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-weight: 600;
+            color: #2d3748;
+        }
+        
+        .overview-section,
+        .records-section {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .overview-section h2,
+        .records-section h2 {
+            margin: 0 0 1.5rem 0;
+            color: #2d3748;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .stat-card {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.5rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            border-left: 4px solid;
+        }
+        
+        .stat-card:nth-child(1) { border-left-color: #3182ce; }
+        .stat-card:nth-child(2) { border-left-color: #38a169; }
+        .stat-card:nth-child(3) { border-left-color: #ed8936; }
+        .stat-card:nth-child(4) { border-left-color: #805ad5; }
+        
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+        
+        .stat-icon.blue { background: #3182ce; }
+        .stat-icon.green { background: #38a169; }
+        .stat-icon.orange { background: #ed8936; }
+        .stat-icon.purple { background: #805ad5; }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin: 0;
+        }
+        
+        .stat-label {
+            color: #718096;
+            font-size: 0.875rem;
+            margin: 0;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #718096;
+        }
+        
+        /* Hide browser breadcrumb navigation and module titles */
+        .breadcrumb, .nav-breadcrumb, [class*="breadcrumb"] {
+            display: none !important;
+        }
+        
+        /* Hide the page title that appears below header */
+        body > h1, .main-content > h1:first-child {
+            display: none !important;
+        }
+        
+        .attendance-record-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .record-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .record-header h4 {
+            margin: 0;
+            color: #2d3748;
+        }
+        
+        .attendance-percentage {
+            font-weight: 600;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.875rem;
+        }
+        
+        .attendance-percentage.good {
+            color: #38a169;
+            background: #f0fff4;
+        }
+        
+        .attendance-percentage.low {
+            color: #e53e3e;
+            background: #fef2f2;
+        }
+        
+        .record-details {
+            color: #718096;
+            font-size: 0.875rem;
+        }
+        
+        .record-details p {
+            margin: 0.25rem 0;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #718096;
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+        
+        .empty-state h3 {
+            margin: 0 0 0.5rem 0;
+            color: #4a5568;
+        }
+        
+        .error-message {
+            text-align: center;
+            padding: 2rem;
+            color: #e53e3e;
+            background: #fef2f2;
+            border-radius: 8px;
+        }
+        
+        /* Button styles */
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #5a67d8;
+        }
+        
+        /* Hide unwanted elements */
+        body {
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+    </style>
+</body>
+</html>

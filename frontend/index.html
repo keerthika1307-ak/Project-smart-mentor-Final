@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Mentor - Academic Management System</title>
+    <meta http-equiv="refresh" content="0; url=landing.html">
+    <script>
+        // Immediate redirect to landing page
+        window.location.replace('landing.html');
+    </script>
+</head>
+<body>
+    <p>Redirecting to Smart Mentor...</p>
+    <!-- Loading Spinner -->
+    <div id="loading-spinner" class="loading-spinner" style="display: none;">
+        <div class="spinner"></div>
+        <p>Loading Smart Mentor...</p>
+    </div>
+
+    <!-- Authentication Container -->
+    <div id="auth-container" class="auth-container">
+        <!-- Login Page -->
+        <div id="login-page" class="auth-page active">
+            <div class="auth-card">
+                <div class="auth-header">
+                    <div class="logo">
+                        <i class="fas fa-graduation-cap"></i>
+                        <h1>Smart Mentor</h1>
+                    </div>
+                    <p>Academic Management System</p>
+                </div>
+                
+                <form id="login-form" class="auth-form">
+                    <div class="form-group">
+                        <label for="login-email">Email Address</label>
+                        <input type="email" id="login-email" name="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" name="password" required>
+                    </div>
+                    
+                    <button type="submit" class="auth-btn">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Sign In
+                    </button>
+                </form>
+                
+                <div class="auth-footer">
+                    <p>Don't have an account? 
+                        <a href="#" onclick="showRegister()">Sign up here</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Register Page -->
+        <div id="register-page" class="auth-page">
+            <div class="auth-card">
+                <div class="auth-header">
+                    <div class="logo">
+                        <i class="fas fa-graduation-cap"></i>
+                        <h1>Smart Mentor</h1>
+                    </div>
+                    <p>Create Your Account</p>
+                </div>
+                
+                <form id="register-form" class="auth-form">
+                    <div class="form-group">
+                        <label for="register-email">Email Address</label>
+                        <input type="email" id="register-email" name="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="register-password">Password</label>
+                        <input type="password" id="register-password" name="password" required minlength="6">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="register-role">I am a</label>
+                        <div class="role-selection">
+                            <label class="role-option">
+                                <input type="radio" name="role" value="student" required>
+                                <div class="role-card">
+                                    <i class="fas fa-user-graduate"></i>
+                                    <span>Student</span>
+                                </div>
+                            </label>
+                            <label class="role-option">
+                                <input type="radio" name="role" value="admin" required>
+                                <div class="role-card">
+                                    <i class="fas fa-user-shield"></i>
+                                    <span>Admin</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group" id="admin-secret-group" style="display: none;">
+                        <label for="admin-secret">Admin Secret Code</label>
+                        <input type="password" id="admin-secret" name="adminSecret" placeholder="Enter admin secret code">
+                        <small class="form-hint">Contact existing admin for the secret code</small>
+                    </div>
+                    
+                    <button type="submit" class="auth-btn">
+                        <i class="fas fa-user-plus"></i>
+                        Create Account
+                    </button>
+                </form>
+                
+                <div class="auth-footer">
+                    <p>Already have an account? 
+                        <a href="#" onclick="showLogin()">Sign in here</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Container -->
+    <div id="dashboard-container" class="dashboard-container" style="display: none;">
+        <!-- Student Dashboard -->
+        <div id="student-dashboard" class="dashboard-content" style="display: none;">
+            <!-- Navigation -->
+            <nav class="dashboard-nav">
+                <div class="nav-brand">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Smart Mentor</span>
+                </div>
+                <div class="nav-menu">
+                    <a href="#" class="nav-item active" data-section="profile">
+                        <i class="fas fa-user"></i> Profile
+                    </a>
+                    <a href="#" class="nav-item" data-section="academics">
+                        <i class="fas fa-book"></i> Academics
+                    </a>
+                    <a href="#" class="nav-item" data-section="attendance">
+                        <i class="fas fa-calendar-check"></i> Attendance
+                    </a>
+                    <a href="#" class="nav-item" data-section="blackmarks">
+                        <i class="fas fa-exclamation-triangle"></i> Blackmarks
+                    </a>
+                    <a href="#" class="nav-item" data-section="ai-feedback">
+                        <i class="fas fa-robot"></i> AI Feedback
+                    </a>
+                    <a href="#" class="nav-item" data-section="messages">
+                        <i class="fas fa-comments"></i> Messages
+                    </a>
+                    <a href="#" class="nav-item" data-section="settings">
+                        <i class="fas fa-cog"></i> Settings
+                    </a>
+                </div>
+                <div class="nav-user">
+                    <div class="user-info">
+                        <span id="user-name">Student Name</span>
+                        <small id="user-email">student@email.com</small>
+                    </div>
+                    <button onclick="logout()" class="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
+            </nav>
+            
+            <!-- Dashboard Content -->
+            <main class="dashboard-main">
+                <div id="student-content">
+                    <!-- Content will be loaded here -->
+                </div>
+            </main>
+        </div>
+        
+        <!-- Admin/Mentor Dashboard -->
+        <div id="admin-dashboard" class="dashboard-content" style="display: none;">
+            <!-- Navigation -->
+            <nav class="dashboard-nav">
+                <div class="nav-brand">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Smart Mentor</span>
+                </div>
+                <div class="nav-menu">
+                    <a href="#" class="nav-item active" data-section="overview">
+                        <i class="fas fa-tachometer-alt"></i> Overview
+                    </a>
+                    <a href="#" class="nav-item" data-section="students">
+                        <i class="fas fa-users"></i> Students
+                    </a>
+                    <a href="#" class="nav-item" data-section="attendance-mgmt">
+                        <i class="fas fa-calendar-alt"></i> Attendance
+                    </a>
+                    <a href="#" class="nav-item" data-section="marks-entry">
+                        <i class="fas fa-edit"></i> Marks Entry
+                    </a>
+                    <a href="#" class="nav-item" data-section="blackmarks-mgmt">
+                        <i class="fas fa-flag"></i> Blackmarks
+                    </a>
+                    <a href="#" class="nav-item" data-section="admin-mgmt" id="admin-mgmt-nav" style="display: none;">
+                        <i class="fas fa-user-shield"></i> Admin Management
+                    </a>
+                    <a href="#" class="nav-item" data-section="messages-mgmt">
+                        <i class="fas fa-envelope"></i> Messages
+                    </a>
+                    <a href="#" class="nav-item" data-section="settings-mgmt">
+                        <i class="fas fa-cog"></i> Settings
+                    </a>
+                </div>
+                <div class="nav-user">
+                    <div class="user-info">
+                        <span id="admin-user-name">Admin Name</span>
+                        <small id="admin-user-email">admin@email.com</small>
+                    </div>
+                    <button onclick="logout()" class="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
+            </nav>
+            
+            <!-- Dashboard Content -->
+            <main class="dashboard-main">
+                <div id="admin-content">
+                    <!-- Content will be loaded here -->
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/student-dashboard.js"></script>
+    <script src="js/admin-dashboard.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

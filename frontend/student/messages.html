@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messages - Smart Mentor</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="modern-dashboard">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Smart Mentor</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-link">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="profile.html" class="nav-link">
+                    <i class="fas fa-user"></i>
+                    <span>Profile</span>
+                </a>
+                <a href="academics.html" class="nav-link">
+                    <i class="fas fa-book"></i>
+                    <span>Academics</span>
+                </a>
+                <a href="attendance.html" class="nav-link">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>Attendance</span>
+                </a>
+                <a href="blackmarks.html" class="nav-link">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>Blackmarks</span>
+                </a>
+                <a href="ai-feedback.html" class="nav-link">
+                    <i class="fas fa-robot"></i>
+                    <span>AI Feedback</span>
+                </a>
+                <a href="messages.html" class="nav-link active">
+                    <i class="fas fa-comments"></i>
+                    <span>Messages</span>
+                </a>
+                <a href="settings.html" class="nav-link">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Top Header -->
+            <header class="top-header">
+                <div class="header-left">
+                    <h1>Messages</h1>
+                </div>
+                <div class="header-right">
+                    <div class="user-profile">
+                        <span id="user-email">student@email.com</span>
+                        <div class="user-avatar">
+                            <span id="user-initial">S</span>
+                        </div>
+                        <button onclick="logout()" class="logout-btn">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </button>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Messages Content -->
+            <div class="dashboard-content-area">
+                <div class="messages-container">
+                    <!-- Chat List -->
+                    <div class="chat-list">
+                        <div class="chat-header">
+                            <h3><i class="fas fa-comments"></i> Messages</h3>
+                        </div>
+                        <div class="chat-contacts">
+                            <!-- Conversations will be loaded dynamically -->
+                            <div class="loading-conversations">
+                                <i class="fas fa-spinner fa-spin"></i>
+                                <p>Loading conversations...</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Chat Window -->
+                    <div class="chat-window">
+                        <div class="chat-window-header">
+                            <div class="chat-contact-info">
+                                <div class="contact-avatar">
+                                    <i class="fas fa-user-tie"></i>
+                                </div>
+                                <div>
+                                    <h4 id="chat-contact-name">Academic Mentor</h4>
+                                    <small id="chat-contact-status">Online</small>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="chat-messages" id="chat-messages">
+                            <div class="no-messages">
+                                <i class="fas fa-comments"></i>
+                                <p>Select a conversation to start messaging</p>
+                            </div>
+                        </div>
+                        
+                        <div class="chat-input">
+                            <form id="message-form" onsubmit="sendMessage(event)">
+                                <input type="text" id="message-input" placeholder="Type your message..." required>
+                                <button type="submit">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/api.js"></script>
+    <script>
+        // Check authentication
+        const token = localStorage.getItem('smart_mentor_token');
+        const user = localStorage.getItem('smart_mentor_user');
+        
+        if (!token || !user) {
+            window.location.href = '../landing.html';
+        }
+        
+        const currentUser = JSON.parse(user);
+        
+        // Update user info
+        document.getElementById('user-email').textContent = currentUser.email;
+        document.getElementById('user-initial').textContent = currentUser.email.charAt(0).toUpperCase();
+        
+        let currentChat = null;
+        let currentMentorId = null;
+        let conversations = [];
+        let refreshInterval = null;
+        
+        // Initialize messaging
+        async function initializeMessaging() {
+            try {
+                console.log('🔍 Initializing messaging for user:', currentUser);
+                console.log('🔑 Token available:', !!localStorage.getItem('smart_mentor_token'));
+                
+                await loadConversations();
+                
+                if (conversations.length > 0) {
+                    // Open first conversation by default
+                    const firstConv = conversations[0];
+                    const userName = firstConv.otherUser.email.split('@')[0];
+                    console.log('📱 Opening first conversation with:', userName);
+                    
+                    // Simulate click event for openChat
+                    currentMentorId = firstConv.otherUser._id;
+                    currentChat = firstConv.otherUser._id;
+                    
+                    // Update chat header
+                    document.getElementById('chat-contact-name').textContent = userName;
+                    document.getElementById('chat-contact-status').textContent = 'Online';
+                    
+                    // Load messages
+                    await loadMessages();
+                    
+                    // Mark first contact as active
+                    setTimeout(() => {
+                        const firstContact = document.querySelector('.contact-item');
+                        if (firstContact) {
+                            firstContact.classList.add('active');
+                        }
+                    }, 100);
+                }
+                
+                // Set up auto-refresh
+                refreshInterval = setInterval(refreshMessages, 5000);
+                console.log('✅ Messaging initialized successfully');
+            } catch (error) {
+                console.error('❌ Error initializing messaging:', error);
+                showToast('Error loading conversations', 'error');
+                
+                // Show error state in UI
+                const contactsContainer = document.querySelector('.chat-contacts');
+                contactsContainer.innerHTML = `
+                    <div class="no-conversations">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>Error loading conversations</p>
+                        <small>Please refresh the page</small>
+                    </div>
+                `;
+            }
+        }
+        
+        async function loadConversations() {
+            try {
+                console.log('📞 Loading conversations...');
+                const response = await API.getConversations();
+                console.log('📞 Conversations response:', response);
+                
+                if (response.success) {
+                    conversations = response.data;
+                    console.log('📞 Found conversations:', conversations.length);
+                    renderConversations();
+                } else {
+                    console.log('📞 No conversations found or error:', response.message);
+                }
+            } catch (error) {
+                console.error('❌ Error loading conversations:', error);
+                showToast('Error loading conversations', 'error');
+            }
+        }
+        
+        function renderConversations() {
+            const contactsContainer = document.querySelector('.chat-contacts');
+            
+            if (conversations.length === 0) {
+                contactsContainer.innerHTML = `
+                    <div class="no-conversations">
+                        <i class="fas fa-comments"></i>
+                        <p>No conversations yet</p>
+                        <small>Messages from mentors will appear here</small>
+                    </div>
+                `;
+                return;
+            }
+            
+            contactsContainer.innerHTML = conversations.map(conv => {
+                const otherUser = conv.otherUser;
+                const lastMessageText = conv.lastMessage ? conv.lastMessage.content.substring(0, 30) + '...' : 'Start a conversation';
+                const userName = otherUser.email.split('@')[0] || 'User';
+                
+                return `
+                    <div class="contact-item" onclick="openChat('${otherUser._id}', '${userName}')">
+                        <div class="contact-avatar">
+                            <i class="fas fa-user-tie"></i>
+                        </div>
+                        <div class="contact-info">
+                            <h4>${userName}</h4>
+                            <p>${lastMessageText}</p>
+                        </div>
+                        <div class="contact-status online"></div>
+                        ${conv.unreadCount > 0 ? `<div class="unread-badge">${conv.unreadCount}</div>` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        async function openChat(userId, userName) {
+            currentMentorId = userId;
+            currentChat = userId;
+            
+            // Update active contact
+            document.querySelectorAll('.contact-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+            
+            // Update chat header
+            const contactName = document.getElementById('chat-contact-name');
+            const contactStatus = document.getElementById('chat-contact-status');
+            
+            contactName.textContent = userName;
+            contactStatus.textContent = 'Online';
+            
+            await loadMessages();
+        }
+        
+        async function loadMessages() {
+            if (!currentMentorId) {
+                console.log('❌ No mentor ID selected');
+                return;
+            }
+            
+            try {
+                console.log('💬 Loading messages with mentor:', currentMentorId);
+                const response = await API.getMessages(currentMentorId);
+                console.log('💬 Messages response:', response);
+                
+                if (response.success) {
+                    console.log('💬 Found messages:', response.data.length);
+                    renderMessages(response.data);
+                } else {
+                    console.log('💬 No messages or error:', response.message);
+                    renderMessages([]);
+                }
+            } catch (error) {
+                console.error('❌ Error loading messages:', error);
+                showToast('Error loading messages', 'error');
+                renderMessages([]);
+            }
+        }
+        
+        function renderMessages(messages) {
+            const chatMessages = document.getElementById('chat-messages');
+            
+            if (messages.length === 0) {
+                chatMessages.innerHTML = `
+                    <div class="no-messages">
+                        <i class="fas fa-comments"></i>
+                        <p>No messages yet. Start the conversation!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            chatMessages.innerHTML = messages.map(message => {
+                // Check if message sender is current user
+                const isOwn = message.sender && (message.sender._id === currentUser.userId || message.sender._id === currentUser.id);
+                const messageClass = isOwn ? 'sent' : 'received';
+                const timestamp = new Date(message.createdAt).toLocaleString();
+                
+                return `
+                    <div class="message ${messageClass}">
+                        <div class="message-content">
+                            <p>${message.content}</p>
+                            <small>${timestamp}</small>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            scrollToBottom();
+        }
+        
+        async function refreshMessages() {
+            if (currentMentorId) {
+                await loadMessages();
+            }
+        }
+        
+        async function sendMessage(event) {
+            event.preventDefault();
+            
+            const messageInput = document.getElementById('message-input');
+            const messageText = messageInput.value.trim();
+            
+            if (!messageText || !currentMentorId) return;
+            
+            try {
+                // Clear input immediately
+                messageInput.value = '';
+                
+                // Send message via API
+                const response = await API.sendMessage({
+                    recipient: currentMentorId,
+                    content: messageText
+                });
+                
+                if (response.success) {
+                    // Reload messages to show the sent message
+                    await loadMessages();
+                    showToast('Message sent successfully', 'success');
+                } else {
+                    showToast('Failed to send message', 'error');
+                    // Restore message text if failed
+                    messageInput.value = messageText;
+                }
+            } catch (error) {
+                console.error('Error sending message:', error);
+                showToast('Error sending message', 'error');
+                // Restore message text if failed
+                messageInput.value = messageText;
+            }
+        }
+        
+        // Test API connection
+        async function testAPIConnection() {
+            try {
+                console.log('🔍 Testing API connection...');
+                console.log('🔑 Token:', localStorage.getItem('smart_mentor_token') ? 'Present' : 'Missing');
+                console.log('👤 User:', currentUser);
+                
+                // Test a simple API call
+                const testResponse = await API.getStudentDashboard();
+                console.log('📊 Dashboard test:', testResponse.success ? 'Success' : 'Failed');
+                
+                if (testResponse.success) {
+                    console.log('✅ API connection working');
+                    return true;
+                } else {
+                    console.log('❌ API connection failed:', testResponse.message);
+                    return false;
+                }
+            } catch (error) {
+                console.error('❌ API test failed:', error);
+                return false;
+            }
+        }
+        
+        // Initialize messaging when page loads
+        document.addEventListener('DOMContentLoaded', async function() {
+            const apiWorking = await testAPIConnection();
+            if (apiWorking) {
+                await initializeMessaging();
+            } else {
+                showToast('API connection failed. Please refresh the page.', 'error');
+            }
+        });
+        
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', function() {
+            if (refreshInterval) {
+                clearInterval(refreshInterval);
+            }
+        });
+        
+        function scrollToBottom() {
+            const chatMessages = document.getElementById('chat-messages');
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        // Logout function
+        function logout() {
+            localStorage.removeItem('smart_mentor_token');
+            localStorage.removeItem('smart_mentor_user');
+            showToast('Logged out successfully', 'success');
+            setTimeout(() => {
+                window.location.href = '../landing.html';
+            }, 1000);
+        }
+        
+        // Toast function
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            const icon = type === 'success' ? 'fas fa-check-circle' : 
+                        type === 'error' ? 'fas fa-exclamation-circle' : 
+                        'fas fa-info-circle';
+            
+            toast.innerHTML = `
+                <i class="${icon}"></i>
+                <span>${message}</span>
+            `;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.transform = 'translateX(0)';
+            }, 100);
+            
+            setTimeout(() => {
+                toast.style.transform = 'translateX(100%)';
+                toast.style.opacity = '0';
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        toast.parentNode.removeChild(toast);
+                    }
+                }, 300);
+            }, 5000);
+        }
+    </script>
+    
+    <style>
+        /* Modern Dashboard Layout */
+        .modern-dashboard {
+            display: flex;
+            min-height: 100vh;
+            background: #f7fafc;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background: white;
+            box-shadow: 2px 0 4px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+        
+        .sidebar-nav {
+            flex: 1;
+            padding: 1rem 0;
+        }
+        
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            color: #4a5568;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        
+        .nav-link:hover {
+            background: #f7fafc;
+            color: #667eea;
+        }
+        
+        .nav-link.active {
+            background: #667eea;
+            color: white;
+        }
+        
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .top-header {
+            background: white;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header-left h1 {
+            font-size: 1.5rem;
+            color: #2d3748;
+            margin: 0;
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #667eea;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .logout-btn {
+            background: #f56565;
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .logout-btn:hover {
+            background: #e53e3e;
+        }
+        
+        .dashboard-content-area {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+        
+        .messages-container {
+            display: flex;
+            height: calc(100vh - 200px);
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .chat-list {
+            width: 300px;
+            border-right: 1px solid #e2e8f0;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .chat-header {
+            padding: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+            background: #f7fafc;
+        }
+        
+        .chat-header h3 {
+            margin: 0;
+            color: #2d3748;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .chat-contacts {
+            flex: 1;
+            overflow-y: auto;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+        
+        .contact-item:hover {
+            background: #f7fafc;
+        }
+        
+        .contact-item.active {
+            background: #667eea;
+            color: white;
+        }
+        
+        .contact-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.75rem;
+        }
+        
+        .contact-item.active .contact-avatar {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .contact-info {
+            flex: 1;
+        }
+        
+        .contact-info h4 {
+            margin: 0 0 0.25rem 0;
+            font-size: 0.875rem;
+        }
+        
+        .contact-info p {
+            margin: 0;
+            font-size: 0.75rem;
+            opacity: 0.8;
+        }
+        
+        .contact-status {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+        }
+        
+        .contact-status.online {
+            background: #48bb78;
+        }
+        
+        .contact-status.offline {
+            background: #a0aec0;
+        }
+        
+        .unread-badge {
+            position: absolute;
+            top: 0.5rem;
+            right: 2rem;
+            background: #f56565;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+        
+        .section-header {
+            padding: 1rem;
+            background: #f7fafc;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .section-header h4 {
+            margin: 0;
+            color: #4a5568;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+        
+        .chat-window {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .chat-window-header {
+            padding: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+            background: #f7fafc;
+        }
+        
+        .chat-contact-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .chat-contact-info h4 {
+            margin: 0;
+            color: #2d3748;
+        }
+        
+        .chat-contact-info small {
+            color: #48bb78;
+            font-weight: 500;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .message {
+            display: flex;
+        }
+        
+        .message.sent {
+            justify-content: flex-end;
+        }
+        
+        .message.received {
+            justify-content: flex-start;
+        }
+        
+        .message-content {
+            max-width: 70%;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+        }
+        
+        .message.sent .message-content {
+            background: #667eea;
+            color: white;
+            border-bottom-right-radius: 0.25rem;
+        }
+        
+        .message.received .message-content {
+            background: #edf2f7;
+            color: #2d3748;
+            border-bottom-left-radius: 0.25rem;
+        }
+        
+        .message-content p {
+            margin: 0 0 0.25rem 0;
+        }
+        
+        .message-content small {
+            opacity: 0.8;
+            font-size: 0.75rem;
+        }
+        
+        .no-messages, .no-conversations, .loading-conversations {
+            text-align: center;
+            padding: 2rem;
+            color: #718096;
+        }
+        
+        .no-messages i, .no-conversations i, .loading-conversations i {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        
+        .loading-conversations i {
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .chat-input {
+            padding: 1rem;
+            border-top: 1px solid #e2e8f0;
+            background: #f7fafc;
+        }
+        
+        .chat-input form {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .chat-input input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid #cbd5e0;
+            border-radius: 8px;
+            outline: none;
+        }
+        
+        .chat-input input:focus {
+            border-color: #667eea;
+        }
+        
+        .chat-input button {
+            padding: 0.75rem 1rem;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .chat-input button:hover {
+            background: #5a67d8;
+        }
+        
+        @media (max-width: 768px) {
+            .messages-container {
+                flex-direction: column;
+            }
+            
+            .chat-list {
+                width: 100%;
+                height: 200px;
+            }
+            
+            .message-content {
+                max-width: 85%;
+            }
+        }
+        
+        /* Hide unwanted elements */
+        body {
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+        
+        /* Hide any browser navigation elements */
+        .breadcrumb, .nav-breadcrumb, [class*="breadcrumb"] {
+            display: none !important;
+        }
+    </style>
+</body>
+</html>

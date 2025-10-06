@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Mentor - Academic Management System</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --success-color: #48bb78;
+            --warning-color: #ed8936;
+            --error-color: #f56565;
+            --white: #ffffff;
+            --gray-50: #f7fafc;
+            --gray-100: #edf2f7;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e0;
+            --gray-500: #718096;
+            --gray-700: #2d3748;
+            --gray-800: #1a202c;
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --radius-lg: 0.5rem;
+            --radius-xl: 0.75rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 1.5rem;
+            --spacing-xl: 2rem;
+            --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --transition-fast: 0.15s ease-in-out;
+        }
+
+        body {
+            font-family: var(--font-family);
+            line-height: 1.6;
+            color: var(--gray-700);
+            background-color: var(--gray-50);
+        }
+
+        /* Authentication Styles */
+        .auth-container {
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--spacing-xl);
+        }
+
+        .auth-page {
+            display: none;
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .auth-page.active {
+            display: block;
+        }
+
+        .auth-card {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+
+        .auth-header {
+            text-align: center;
+            padding: var(--spacing-xl);
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+        }
+
+        .auth-header .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .auth-header .logo i {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+        }
+
+        .auth-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--gray-800);
+            margin: 0;
+        }
+
+        .auth-header p {
+            color: var(--gray-500);
+            margin: 0;
+        }
+
+        .auth-form {
+            padding: var(--spacing-xl);
+        }
+
+        .form-group {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--gray-700);
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: var(--spacing-md);
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            font-size: 1rem;
+            transition: var(--transition-fast);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .role-selection {
+            display: flex;
+            gap: var(--spacing-md);
+            margin-top: 0.5rem;
+        }
+
+        .role-option {
+            flex: 1;
+            cursor: pointer;
+        }
+
+        .role-option input[type="radio"] {
+            display: none;
+        }
+
+        .role-card {
+            padding: var(--spacing-lg);
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            text-align: center;
+            transition: var(--transition-fast);
+            background: var(--white);
+        }
+
+        .role-card i {
+            font-size: 2rem;
+            color: var(--gray-400);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .role-card span {
+            font-weight: 500;
+            color: var(--gray-700);
+        }
+
+        .role-option input[type="radio"]:checked + .role-card {
+            border-color: var(--primary-color);
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+        }
+
+        .role-option input[type="radio"]:checked + .role-card i {
+            color: var(--primary-color);
+        }
+
+        .role-option input[type="radio"]:checked + .role-card span {
+            color: var(--primary-color);
+        }
+
+        .form-hint {
+            color: var(--gray-500);
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+            display: block;
+        }
+
+        .auth-btn {
+            width: 100%;
+            padding: var(--spacing-lg);
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: var(--white);
+            border: none;
+            border-radius: var(--radius-lg);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-fast);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .auth-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .auth-footer {
+            text-align: center;
+            padding: var(--spacing-xl);
+            background: var(--gray-50);
+        }
+
+        .auth-footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .auth-footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Dashboard Styles */
+        .dashboard-container {
+            min-height: 100vh;
+            background: var(--gray-50);
+            display: none;
+        }
+
+        .dashboard-content {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .dashboard-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--white);
+            padding: 0 var(--spacing-xl);
+            box-shadow: var(--shadow-md);
+            height: 70px;
+            z-index: 100;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--gray-800);
+        }
+
+        .nav-brand i {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: var(--spacing-md);
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem var(--spacing-md);
+            color: var(--gray-600);
+            text-decoration: none;
+            border-radius: var(--radius-lg);
+            transition: var(--transition-fast);
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .nav-item:hover {
+            background: var(--gray-100);
+            color: var(--gray-800);
+        }
+
+        .nav-item.active {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: var(--white);
+        }
+
+        .nav-user {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-info span {
+            display: block;
+            font-weight: 600;
+            color: var(--gray-800);
+        }
+
+        .user-info small {
+            color: var(--gray-500);
+            font-size: 0.75rem;
+        }
+
+        .logout-btn {
+            background: var(--error-color);
+            color: var(--white);
+            border: none;
+            padding: 0.5rem;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: var(--transition-fast);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logout-btn:hover {
+            background: #e53e3e;
+            transform: scale(1.05);
+        }
+
+        .dashboard-main {
+            flex: 1;
+            padding: var(--spacing-xl);
+            overflow-y: auto;
+        }
+
+        .welcome-card {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-xl);
+            box-shadow: var(--shadow-md);
+            text-align: center;
+        }
+
+        .welcome-card h2 {
+            color: var(--gray-800);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .welcome-card p {
+            color: var(--gray-500);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 3000;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .toast {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            padding: var(--spacing-md);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            min-width: 300px;
+            transform: translateX(100%);
+            animation: slideIn 0.3s ease-out forwards;
+        }
+
+        .toast.success {
+            border-left: 4px solid var(--success-color);
+        }
+
+        .toast.error {
+            border-left: 4px solid var(--error-color);
+        }
+
+        .toast.warning {
+            border-left: 4px solid var(--warning-color);
+        }
+
+        @keyframes slideIn {
+            to {
+                transform: translateX(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .auth-container {
+                padding: var(--spacing-md);
+            }
+            
+            .auth-page {
+                max-width: 100%;
+            }
+            
+            .role-selection {
+                flex-direction: column;
+            }
+            
+            .dashboard-nav {
+                flex-direction: column;
+                height: auto;
+                padding: var(--spacing-md);
+            }
+            
+            .nav-menu {
+                flex-wrap: wrap;
+                justify-content: center;
+                margin: var(--spacing-md) 0;
+            }
+            
+            .nav-user {
+                order: -1;
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .dashboard-main {
+                padding: var(--spacing-md);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Authentication Container -->
+    <div id="auth-container" class="auth-container">
+        <!-- Login Page -->
+        <div id="login-page" class="auth-page active">
+            <div class="auth-card">
+                <div class="auth-header">
+                    <div class="logo">
+                        <i class="fas fa-graduation-cap"></i>
+                        <h1>Smart Mentor</h1>
+                    </div>
+                    <p>Academic Management System</p>
+                </div>
+                
+                <form id="login-form" class="auth-form">
+                    <div class="form-group">
+                        <label for="login-email">Email Address</label>
+                        <input type="email" id="login-email" name="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" name="password" required>
+                    </div>
+                    
+                    <button type="submit" class="auth-btn">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Sign In
+                    </button>
+                </form>
+                
+                <div class="auth-footer">
+                    <p>Don't have an account? 
+                        <a href="#" onclick="showRegister()">Sign up here</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Register Page -->
+        <div id="register-page" class="auth-page">
+            <div class="auth-card">
+                <div class="auth-header">
+                    <div class="logo">
+                        <i class="fas fa-graduation-cap"></i>
+                        <h1>Smart Mentor</h1>
+                    </div>
+                    <p>Create Your Account</p>
+                </div>
+                
+                <form id="register-form" class="auth-form">
+                    <div class="form-group">
+                        <label for="register-email">Email Address</label>
+                        <input type="email" id="register-email" name="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="register-password">Password</label>
+                        <input type="password" id="register-password" name="password" required minlength="6">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="register-role">I am a</label>
+                        <div class="role-selection">
+                            <label class="role-option">
+                                <input type="radio" name="role" value="student" required>
+                                <div class="role-card">
+                                    <i class="fas fa-user-graduate"></i>
+                                    <span>Student</span>
+                                </div>
+                            </label>
+                            <label class="role-option">
+                                <input type="radio" name="role" value="admin" required>
+                                <div class="role-card">
+                                    <i class="fas fa-user-shield"></i>
+                                    <span>Admin</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group" id="admin-secret-group" style="display: none;">
+                        <label for="admin-secret">Admin Secret Code</label>
+                        <input type="password" id="admin-secret" name="adminSecret" placeholder="Enter admin secret code">
+                        <small class="form-hint">Contact existing admin for the secret code</small>
+                    </div>
+                    
+                    <button type="submit" class="auth-btn">
+                        <i class="fas fa-user-plus"></i>
+                        Create Account
+                    </button>
+                </form>
+                
+                <div class="auth-footer">
+                    <p>Already have an account? 
+                        <a href="#" onclick="showLogin()">Sign in here</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Container -->
+    <div id="dashboard-container" class="dashboard-container">
+        <div class="dashboard-content">
+            <!-- Navigation -->
+            <nav class="dashboard-nav">
+                <div class="nav-brand">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Smart Mentor</span>
+                </div>
+                <div class="nav-menu">
+                    <div class="nav-item active">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </div>
+                    <div class="nav-item">
+                        <i class="fas fa-user"></i> Profile
+                    </div>
+                    <div class="nav-item">
+                        <i class="fas fa-book"></i> Academics
+                    </div>
+                </div>
+                <div class="nav-user">
+                    <div class="user-info">
+                        <span id="user-name">User Name</span>
+                        <small id="user-email">user@email.com</small>
+                    </div>
+                    <button onclick="logout()" class="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
+            </nav>
+            
+            <!-- Dashboard Content -->
+            <main class="dashboard-main">
+                <div class="welcome-card">
+                    <h2>Welcome to Smart Mentor Dashboard!</h2>
+                    <p>You are successfully logged in. The complete dashboard features are being loaded...</p>
+                    <p><strong>Login Credentials for Testing:</strong></p>
+                    <p>Admin: admin@smartmentor.com / admin123</p>
+                    <p>Student: 23suit01@student.smartmentor.com / student123</p>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script>
+        // Simple JavaScript for basic functionality
+        const API_BASE_URL = 'http://localhost:3001/api';
+        let currentUser = null;
+
+        // Show/Hide functions
+        function showLogin() {
+            document.getElementById('register-page').classList.remove('active');
+            document.getElementById('login-page').classList.add('active');
+        }
+
+        function showRegister() {
+            document.getElementById('login-page').classList.remove('active');
+            document.getElementById('register-page').classList.add('active');
+        }
+
+        // Role selection handler
+        document.addEventListener('DOMContentLoaded', function() {
+            const roleInputs = document.querySelectorAll('input[name="role"]');
+            roleInputs.forEach(input => {
+                input.addEventListener('change', function(e) {
+                    const selectedRole = e.target.value;
+                    const adminSecretGroup = document.getElementById('admin-secret-group');
+                    
+                    if (selectedRole === 'admin') {
+                        adminSecretGroup.style.display = 'block';
+                        document.getElementById('admin-secret').required = true;
+                    } else {
+                        adminSecretGroup.style.display = 'none';
+                        document.getElementById('admin-secret').required = false;
+                        document.getElementById('admin-secret').value = '';
+                    }
+                });
+            });
+
+            // Login form handler
+            document.getElementById('login-form').addEventListener('submit', handleLogin);
+            
+            // Register form handler
+            document.getElementById('register-form').addEventListener('submit', handleRegister);
+        });
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const credentials = {
+                email: formData.get('email').trim(),
+                password: formData.get('password')
+            };
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(credentials)
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    currentUser = data.data.user;
+                    localStorage.setItem('smart_mentor_token', data.data.token);
+                    localStorage.setItem('smart_mentor_user', JSON.stringify(currentUser));
+                    
+                    showToast('Login successful! Welcome back.', 'success');
+                    
+                    setTimeout(() => {
+                        showDashboard();
+                    }, 1000);
+                } else {
+                    showToast(data.message || 'Login failed', 'error');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                showToast('Network error. Please try again.', 'error');
+            }
+        }
+
+        async function handleRegister(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const userData = {
+                email: formData.get('email').trim(),
+                password: formData.get('password'),
+                role: formData.get('role')
+            };
+
+            // Add admin secret if role is admin
+            if (userData.role === 'admin') {
+                const adminSecret = formData.get('adminSecret');
+                if (!adminSecret) {
+                    showToast('Admin secret code is required', 'error');
+                    return;
+                }
+                userData.adminSecret = adminSecret;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/register`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(userData)
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    currentUser = data.data.user;
+                    localStorage.setItem('smart_mentor_token', data.data.token);
+                    localStorage.setItem('smart_mentor_user', JSON.stringify(currentUser));
+                    
+                    showToast('Account created successfully!', 'success');
+                    
+                    setTimeout(() => {
+                        showDashboard();
+                    }, 1000);
+                } else {
+                    showToast(data.message || 'Registration failed', 'error');
+                }
+            } catch (error) {
+                console.error('Register error:', error);
+                showToast('Network error. Please try again.', 'error');
+            }
+        }
+
+        function showDashboard() {
+            document.getElementById('auth-container').style.display = 'none';
+            document.getElementById('dashboard-container').style.display = 'block';
+            
+            // Update user info
+            if (currentUser) {
+                document.getElementById('user-name').textContent = currentUser.email.split('@')[0];
+                document.getElementById('user-email').textContent = currentUser.email;
+            }
+        }
+
+        function logout() {
+            currentUser = null;
+            localStorage.removeItem('smart_mentor_token');
+            localStorage.removeItem('smart_mentor_user');
+            
+            document.getElementById('dashboard-container').style.display = 'none';
+            document.getElementById('auth-container').style.display = 'flex';
+            
+            showToast('Logged out successfully', 'success');
+            showLogin();
+        }
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            const icon = type === 'success' ? 'fas fa-check-circle' : 
+                        type === 'error' ? 'fas fa-exclamation-circle' : 
+                        'fas fa-info-circle';
+            
+            toast.innerHTML = `
+                <i class="${icon}"></i>
+                <span>${message}</span>
+            `;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.transform = 'translateX(0)';
+            }, 100);
+            
+            setTimeout(() => {
+                toast.style.transform = 'translateX(100%)';
+                toast.style.opacity = '0';
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        toast.parentNode.removeChild(toast);
+                    }
+                }, 300);
+            }, 5000);
+            
+            toast.addEventListener('click', () => {
+                toast.style.transform = 'translateX(100%)';
+                toast.style.opacity = '0';
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        toast.parentNode.removeChild(toast);
+                    }
+                }, 300);
+            });
+        }
+
+        // Check if user is already logged in
+        window.addEventListener('load', function() {
+            const token = localStorage.getItem('smart_mentor_token');
+            const user = localStorage.getItem('smart_mentor_user');
+            
+            if (token && user) {
+                currentUser = JSON.parse(user);
+                showDashboard();
+            }
+        });
+    </script>
+</body>
+</html>

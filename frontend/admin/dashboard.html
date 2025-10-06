@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Smart Mentor</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="modern-dashboard">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Smart Mentor</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-link active" onclick="showModule('dashboard')">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="students.html" class="nav-link">
+                    <i class="fas fa-users"></i>
+                    <span>Students</span>
+                </a>
+                <a href="academics.html" class="nav-link">
+                    <i class="fas fa-book"></i>
+                    <span>Academics</span>
+                </a>
+                <a href="#" class="nav-link" onclick="showModule('attendance')">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>Attendance</span>
+                </a>
+                <a href="#" class="nav-link" onclick="showModule('feedback')">
+                    <i class="fas fa-comment-alt"></i>
+                    <span>Feedback</span>
+                </a>
+                <a href="#" class="nav-link" onclick="showModule('messages')">
+                    <i class="fas fa-envelope"></i>
+                    <span>Messages</span>
+                </a>
+                <a href="#" class="nav-link" onclick="showModule('blackmarks')">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>Blackmarks</span>
+                </a>
+                <a href="notifications.html" class="nav-link">
+                    <i class="fas fa-bell"></i>
+                    <span>Notifications</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Top Header -->
+            <header class="top-header">
+                <div class="header-left">
+                    <h1>Admin Dashboard</h1>
+                </div>
+                <div class="header-right">
+                    <div class="user-profile">
+                        <span id="user-email">thomas@gmail.com</span>
+                        <div class="user-avatar">
+                            <span id="user-initial">T</span>
+                        </div>
+                        <button onclick="logout()" class="logout-btn">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </button>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Dashboard Content -->
+            <div class="dashboard-content-area">
+                
+                <!-- Dashboard Module -->
+                <div id="dashboard-module" class="module-content active">
+                    <!-- Welcome Section -->
+                    <div class="welcome-section">
+                        <h2>Welcome back, <span id="welcome-name">thomas</span>!</h2>
+                        <p>Manage students, track performance, and oversee the academic system.</p>
+                    </div>
+                
+                <!-- Stats Cards -->
+                <div class="stats-container">
+                    <div class="stat-card blue">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-number" id="total-students">56</div>
+                            <div class="stat-label">Total Students</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card orange">
+                        <div class="stat-icon">
+                            <i class="fas fa-calendar-times"></i>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-number" id="low-attendance">8</div>
+                            <div class="stat-label">Low Attendance</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card red">
+                        <div class="stat-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-number" id="low-cgpa">12</div>
+                            <div class="stat-label">Low CGPA</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card purple">
+                        <div class="stat-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-number" id="blackmarks-students">5</div>
+                            <div class="stat-label">Students with Blackmarks</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Action Cards Grid -->
+                <div class="action-cards-grid">
+                    <div class="action-card">
+                        <div class="action-icon blue">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="action-content">
+                            <h3>Student Management</h3>
+                            <p>Add new students, view profiles, and manage student data.</p>
+                            <a href="students.html" class="action-btn">
+                                <i class="fas fa-users"></i>
+                                Manage Students
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="action-card">
+                        <div class="action-icon green">
+                            <i class="fas fa-edit"></i>
+                        </div>
+                        <div class="action-content">
+                            <h3>Marks Entry</h3>
+                            <p>Add subjects and enter marks for students.</p>
+                            <a href="marks.html" class="action-btn">
+                                <i class="fas fa-plus"></i>
+                                Enter Marks
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="action-card">
+                        <div class="action-icon orange">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div class="action-content">
+                            <h3>Attendance Management</h3>
+                            <p>Record monthly attendance for all students.</p>
+                            <button onclick="showModule('attendance')" class="action-btn">
+                                <i class="fas fa-calendar-alt"></i>
+                                Record Attendance
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="action-card">
+                        <div class="action-icon red">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="action-content">
+                            <h3>Blackmarks Management</h3>
+                            <p>Assign and manage student blackmarks.</p>
+                            <button onclick="showModule('blackmarks')" class="action-btn">
+                                <i class="fas fa-flag"></i>
+                                Manage Blackmarks
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Recent Activities -->
+                <div class="recent-activities">
+                    <h3><i class="fas fa-clock"></i> Recent Activities</h3>
+                    <div class="activity-item">
+                        <div class="activity-icon blue">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <div class="activity-content">
+                            <strong>New student registered:</strong> AHAMED NASEER N (23SUIT01)
+                        </div>
+                    </div>
+                </div>
+                </div>
+                
+                <!-- Attendance Module -->
+                <div id="attendance-module" class="module-content">
+                    <!-- Page Title -->
+                    <div class="page-header">
+                        <h2><i class="fas fa-calendar-check"></i> Attendance Management</h2>
+                        <p>Record monthly attendance for students and track their attendance patterns.</p>
+                    </div>
+                    
+                    <!-- Record Attendance Section -->
+                    <div class="action-section">
+                        <div class="section-header">
+                            <h2><i class="fas fa-calendar-plus"></i> Record Attendance</h2>
+                        </div>
+                        
+                        <form id="attendance-form" class="attendance-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="student-select">Select Student</label>
+                                    <select id="student-select" required>
+                                        <option value="">Choose a student...</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="month-select">Month</label>
+                                    <select id="month-select" required>
+                                        <option value="">Select month...</option>
+                                        <option value="January">January</option>
+                                        <option value="February">February</option>
+                                        <option value="March">March</option>
+                                        <option value="April">April</option>
+                                        <option value="May">May</option>
+                                        <option value="June">June</option>
+                                        <option value="July">July</option>
+                                        <option value="August">August</option>
+                                        <option value="September">September</option>
+                                        <option value="October">October</option>
+                                        <option value="November">November</option>
+                                        <option value="December">December</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="year-select">Year</label>
+                                    <select id="year-select" required>
+                                        <option value="">Select year...</option>
+                                        <option value="2024">2024</option>
+                                        <option value="2025">2025</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="days-present">Days Present</label>
+                                    <input type="number" id="days-present" min="0" max="31" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="total-days">Total Days</label>
+                                    <input type="number" id="total-days" min="1" max="31" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="attendance-percentage">Percentage</label>
+                                    <input type="text" id="attendance-percentage" readonly>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i>
+                                Record Attendance
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <!-- Overview Section -->
+                    <div class="overview-section">
+                        <h2><i class="fas fa-chart-bar"></i> Overview</h2>
+                        <div class="overview-cards">
+                            <div class="overview-card blue">
+                                <div class="card-icon">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <div class="card-content">
+                                    <h3>Total Students</h3>
+                                    <div class="metric" id="overview-total-students">0</div>
+                                    <small>Registered students</small>
+                                </div>
+                            </div>
+                            <div class="overview-card green">
+                                <div class="card-icon">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <div class="card-content">
+                                    <h3>Good Attendance</h3>
+                                    <div class="metric" id="overview-good-attendance">0</div>
+                                    <small>≥75% attendance</small>
+                                </div>
+                            </div>
+                            <div class="overview-card orange">
+                                <div class="card-icon">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                </div>
+                                <div class="card-content">
+                                    <h3>Low Attendance</h3>
+                                    <div class="metric" id="overview-low-attendance">0</div>
+                                    <small>&lt;75% attendance</small>
+                                </div>
+                            </div>
+                            <div class="overview-card purple">
+                                <div class="card-icon">
+                                    <i class="fas fa-percentage"></i>
+                                </div>
+                                <div class="card-content">
+                                    <h3>Average Attendance</h3>
+                                    <div class="metric" id="overview-avg-attendance">0%</div>
+                                    <small>Overall average</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Recent Records -->
+                    <div class="recent-records">
+                        <h2><i class="fas fa-history"></i> Recent Records</h2>
+                        <div id="attendance-records-container" class="records-container">
+                            <div class="loading">Loading attendance records...</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Other modules will be added here -->
+                
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/api.js"></script>
+    <script>
+        // Check authentication
+        const token = localStorage.getItem('smart_mentor_token');
+        const user = localStorage.getItem('smart_mentor_user');
+        
+        if (!token || !user) {
+            window.location.href = '../landing.html';
+        }
+        
+        const currentUser = JSON.parse(user);
+        
+        // Check if user is admin or mentor
+        if (currentUser.role !== 'admin' && currentUser.role !== 'mentor') {
+            window.location.href = '../landing.html';
+        }
+        
+        // Update user info
+        const userName = currentUser.email.split('@')[0];
+        const userInitial = userName.charAt(0).toUpperCase();
+        
+        document.getElementById('user-email').textContent = currentUser.email;
+        document.getElementById('user-initial').textContent = userInitial;
+        document.getElementById('welcome-name').textContent = userName;
+        
+        // Load dashboard data
+        async function loadDashboardData() {
+            try {
+                // Simulate loading dashboard statistics
+                // In real app, this would fetch from API
+                showToast('Dashboard loaded successfully', 'success');
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+                showToast('Error loading dashboard data', 'error');
+            }
+        }
+        
+        // Logout function
+        function logout() {
+            localStorage.removeItem('smart_mentor_token');
+            localStorage.removeItem('smart_mentor_user');
+            showToast('Logged out successfully', 'success');
+            setTimeout(() => {
+                window.location.href = '../landing.html';
+            }, 1000);
+        }
+        
+        // Toast function
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            const icon = type === 'success' ? 'fas fa-check-circle' : 
+                        type === 'error' ? 'fas fa-exclamation-circle' : 
+                        'fas fa-info-circle';
+            
+            toast.innerHTML = `
+                <i class="${icon}"></i>
+                <span>${message}</span>
+            `;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.transform = 'translateX(0)';
+            }, 100);
+            
+            setTimeout(() => {
+                toast.style.transform = 'translateX(100%)';
+                toast.style.opacity = '0';
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        toast.parentNode.removeChild(toast);
+                    }
+                }, 300);
+            }, 5000);
+        }
+        
+        // Module switching functionality
+        function showModule(moduleId) {
+            // Hide all modules
+            const modules = document.querySelectorAll('.module-content');
+            modules.forEach(module => {
+                module.classList.remove('active');
+            });
+            
+            // Remove active class from all nav links
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            // Show selected module
+            const targetModule = document.getElementById(moduleId + '-module');
+            if (targetModule) {
+                targetModule.classList.add('active');
+            }
+            
+            // Add active class to clicked nav link
+            event.target.closest('.nav-link').classList.add('active');
+            
+            // Update header title
+            const headerTitle = document.querySelector('.header-left h1');
+            switch(moduleId) {
+                case 'dashboard':
+                    headerTitle.textContent = 'Admin Dashboard';
+                    break;
+                case 'attendance':
+                    headerTitle.textContent = 'Attendance Management';
+                    loadAttendanceModule();
+                    break;
+                case 'feedback':
+                    headerTitle.textContent = 'AI Feedback';
+                    break;
+                case 'messages':
+                    headerTitle.textContent = 'Messages';
+                    break;
+                case 'blackmarks':
+                    headerTitle.textContent = 'Blackmarks Management';
+                    break;
+            }
+        }
+        
+        // Attendance module functionality
+        async function loadAttendanceModule() {
+            await loadStudentsForAttendance();
+            await loadAttendanceOverview();
+            await loadAttendanceRecords();
+            setupAttendanceForm();
+        }
+        
+        // Load students for attendance dropdown
+        async function loadStudentsForAttendance() {
+            try {
+                const response = await API.getMentorStudents();
+                if (response.success) {
+                    const studentSelect = document.getElementById('student-select');
+                    studentSelect.innerHTML = '<option value="">Choose a student...</option>';
+                    
+                    response.data.students.forEach(student => {
+                        const option = document.createElement('option');
+                        option.value = student._id;
+                        const name = student.name || `Student ${student._id.slice(-4)}`;
+                        const regNo = student.regNo || 'No Reg';
+                        option.textContent = `${name} (${regNo})`;
+                        studentSelect.appendChild(option);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading students:', error);
+            }
+        }
+        
+        // Load attendance overview
+        async function loadAttendanceOverview() {
+            try {
+                const response = await API.getMentorStudents();
+                if (response.success) {
+                    const students = response.data.students;
+                    let totalStudents = students.length;
+                    let goodAttendance = 0;
+                    let lowAttendance = 0;
+                    let totalAttendanceSum = 0;
+                    
+                    students.forEach(student => {
+                        const attendance = student.attendance || 0;
+                        totalAttendanceSum += attendance;
+                        
+                        if (attendance >= 75) {
+                            goodAttendance++;
+                        } else {
+                            lowAttendance++;
+                        }
+                    });
+                    
+                    const avgAttendance = totalStudents > 0 ? (totalAttendanceSum / totalStudents).toFixed(1) : 0;
+                    
+                    document.getElementById('overview-total-students').textContent = totalStudents;
+                    document.getElementById('overview-good-attendance').textContent = goodAttendance;
+                    document.getElementById('overview-low-attendance').textContent = lowAttendance;
+                    document.getElementById('overview-avg-attendance').textContent = avgAttendance + '%';
+                }
+            } catch (error) {
+                console.error('Error loading attendance overview:', error);
+            }
+        }
+        
+        // Load attendance records
+        async function loadAttendanceRecords() {
+            try {
+                const response = await API.getMentorStudents();
+                if (response.success) {
+                    const students = response.data.students;
+                    const recordsContainer = document.getElementById('attendance-records-container');
+                    
+                    // Filter students with attendance > 0
+                    const studentsWithAttendance = students.filter(student => 
+                        student.attendance !== undefined && student.attendance > 0
+                    );
+                    
+                    if (studentsWithAttendance.length === 0) {
+                        recordsContainer.innerHTML = `
+                            <div class="empty-state">
+                                <i class="fas fa-calendar-times"></i>
+                                <h3>No attendance records found</h3>
+                                <p>Start recording attendance to see records here.</p>
+                            </div>
+                        `;
+                        return;
+                    }
+                    
+                    // Sort by attendance percentage (highest first)
+                    const sortedStudents = studentsWithAttendance.sort((a, b) => b.attendance - a.attendance);
+                    
+                    recordsContainer.innerHTML = sortedStudents.map(student => `
+                        <div class="attendance-record-card">
+                            <div class="record-header">
+                                <h4>${student.name || 'Unknown Student'} (${student.regNo || 'No RegNo'})</h4>
+                                <span class="attendance-percentage ${student.attendance < 75 ? 'low' : 'good'}">
+                                    ${student.attendance}%
+                                </span>
+                            </div>
+                            <div class="record-details">
+                                <p><i class="fas fa-percentage"></i> Overall Attendance: ${student.attendance}%</p>
+                                <p><i class="fas fa-envelope"></i> Email: ${student.email}</p>
+                                <p><i class="fas fa-calendar"></i> Last updated: ${new Date().toLocaleDateString()}</p>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            } catch (error) {
+                console.error('Error loading attendance records:', error);
+            }
+        }
+        
+        // Setup attendance form
+        function setupAttendanceForm() {
+            const daysPresent = document.getElementById('days-present');
+            const totalDays = document.getElementById('total-days');
+            const percentage = document.getElementById('attendance-percentage');
+            
+            function calculatePercentage() {
+                const present = parseFloat(daysPresent.value) || 0;
+                const total = parseFloat(totalDays.value) || 0;
+                
+                if (total > 0) {
+                    const calc = ((present / total) * 100).toFixed(1);
+                    percentage.value = calc + '%';
+                } else {
+                    percentage.value = '';
+                }
+            }
+            
+            daysPresent.addEventListener('input', calculatePercentage);
+            totalDays.addEventListener('input', calculatePercentage);
+            
+            // Handle form submission
+            document.getElementById('attendance-form').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const studentId = document.getElementById('student-select').value;
+                const month = document.getElementById('month-select').value;
+                const year = parseInt(document.getElementById('year-select').value);
+                const present = parseInt(daysPresent.value);
+                const total = parseInt(totalDays.value);
+                
+                if (!studentId || !month || !year || isNaN(present) || isNaN(total)) {
+                    showToast('Please fill all fields correctly', 'error');
+                    return;
+                }
+                
+                if (present > total) {
+                    showToast('Days present cannot be more than total days', 'error');
+                    return;
+                }
+                
+                try {
+                    const response = await API.addStudentAttendance(studentId, {
+                        month,
+                        year,
+                        daysPresent: present,
+                        totalDays: total
+                    });
+                    
+                    if (response.success) {
+                        showToast('Attendance recorded successfully', 'success');
+                        this.reset();
+                        percentage.value = '';
+                        loadAttendanceOverview();
+                        loadAttendanceRecords();
+                    } else {
+                        showToast('Error recording attendance: ' + (response.message || 'Unknown error'), 'error');
+                    }
+                } catch (error) {
+                    showToast('Error recording attendance: ' + error.message, 'error');
+                }
+            });
+        }
+        
+        // Load data on page load
+        window.addEventListener('load', loadDashboardData);
+    </script>
+    
+    <style>
+        /* Module switching styles */
+        .module-content {
+            display: none;
+        }
+        
+        .module-content.active {
+            display: block;
+        }
+        
+        /* Attendance module specific styles */
+        .attendance-form {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-group label {
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #374151;
+        }
+        
+        .form-group input,
+        .form-group select {
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 0.875rem;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .overview-section {
+            margin-bottom: 2rem;
+        }
+        
+        .overview-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .overview-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .overview-card.blue .card-icon {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+        
+        .overview-card.green .card-icon {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+        
+        .overview-card.orange .card-icon {
+            background: #fed7aa;
+            color: #ea580c;
+        }
+        
+        .overview-card.purple .card-icon {
+            background: #e9d5ff;
+            color: #9333ea;
+        }
+        
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+        
+        .card-content h3 {
+            margin: 0 0 0.25rem 0;
+            font-size: 0.875rem;
+            color: #6b7280;
+            font-weight: 500;
+        }
+        
+        .card-content .metric {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: #111827;
+            margin: 0;
+        }
+        
+        .card-content small {
+            color: #9ca3af;
+            font-size: 0.75rem;
+        }
+        
+        .records-container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .attendance-record-card {
+            padding: 1rem;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        
+        .attendance-record-card:last-child {
+            border-bottom: none;
+        }
+        
+        .record-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .record-header h4 {
+            margin: 0;
+            color: #111827;
+            font-size: 1rem;
+        }
+        
+        .attendance-percentage {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+        
+        .attendance-percentage.good {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+        
+        .attendance-percentage.low {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+        
+        .record-details {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+        
+        .record-details p {
+            margin: 0.25rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #6b7280;
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+        
+        .empty-state h3 {
+            margin: 0 0 0.5rem 0;
+            color: #374151;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #6b7280;
+        }
+        
+        /* Action button styling */
+        .action-btn {
+            background: none;
+            border: none;
+            color: inherit;
+            text-decoration: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: inherit;
+            font-family: inherit;
+            padding: 0;
+        }
+        
+        .action-btn:hover {
+            text-decoration: underline;
+        }
+        
+        .modern-dashboard {
+            display: flex;
+            min-height: 100vh;
+            background: #f8fafc;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background: #2d3748;
+            color: white;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #4a5568;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+        
+        .logo i {
+            color: #667eea;
+            font-size: 1.5rem;
+        }
+        
+        .sidebar-nav {
+            padding: 1rem 0;
+        }
+        
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            color: #cbd5e0;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        
+        .nav-link:hover {
+            background: #4a5568;
+            color: white;
+        }
+        
+        .nav-link.active {
+            background: #667eea;
+            color: white;
+        }
+        
+        .main-content {
+            margin-left: 250px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .top-header {
+            background: white;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header-left h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin: 0;
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: #667eea;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .dashboard-content-area {
+            padding: 2rem;
+            flex: 1;
+        }
+        
+        .welcome-section {
+            margin-bottom: 2rem;
+        }
+        
+        .welcome-section h2 {
+            font-size: 1.75rem;
+            color: #2d3748;
+            margin: 0 0 0.5rem 0;
+        }
+        
+        .welcome-section p {
+            color: #718096;
+            margin: 0;
+        }
+        
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border-left: 4px solid;
+        }
+        
+        .stat-card.blue {
+            border-color: #3182ce;
+        }
+        
+        .stat-card.orange {
+            border-color: #ed8936;
+        }
+        
+        .stat-card.red {
+            border-color: #e53e3e;
+        }
+        
+        .stat-card.purple {
+            border-color: #805ad5;
+        }
+        
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+        
+        .stat-card.blue .stat-icon {
+            background: #3182ce;
+        }
+        
+        .stat-card.orange .stat-icon {
+            background: #ed8936;
+        }
+        
+        .stat-card.red .stat-icon {
+            background: #e53e3e;
+        }
+        
+        .stat-card.purple .stat-icon {
+            background: #805ad5;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin: 0;
+        }
+        
+        .stat-label {
+            color: #718096;
+            font-size: 0.875rem;
+            margin: 0;
+        }
+        
+        .action-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .action-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .action-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            margin-bottom: 1rem;
+        }
+        
+        .action-icon.blue { background: #3182ce; }
+        .action-icon.green { background: #38a169; }
+        .action-icon.orange { background: #ed8936; }
+        .action-icon.red { background: #e53e3e; }
+        
+        .action-content h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin: 0 0 0.5rem 0;
+        }
+        
+        .action-content p {
+            color: #718096;
+            margin: 0 0 1rem 0;
+            font-size: 0.875rem;
+        }
+        
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+        
+        .action-btn:hover {
+            background: #5a67d8;
+        }
+        
+        .recent-activities {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .recent-activities h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin: 0 0 1rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+        
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        
+        .activity-icon.blue { background: #3182ce; }
+        
+        .activity-content {
+            color: #4a5568;
+        }
+        
+        .logout-btn {
+            background: #e53e3e;
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .logout-btn:hover {
+            background: #c53030;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-cards-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</body>
+</html>

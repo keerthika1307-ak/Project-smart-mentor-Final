@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance - Smart Mentor</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="modern-dashboard">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Smart Mentor</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-link">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="profile.html" class="nav-link">
+                    <i class="fas fa-user"></i>
+                    <span>Profile</span>
+                </a>
+                <a href="academics.html" class="nav-link">
+                    <i class="fas fa-book"></i>
+                    <span>Academics</span>
+                </a>
+                <a href="attendance.html" class="nav-link active">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>Attendance</span>
+                </a>
+                <a href="blackmarks.html" class="nav-link">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>Blackmarks</span>
+                </a>
+                <a href="ai-feedback.html" class="nav-link">
+                    <i class="fas fa-robot"></i>
+                    <span>AI Feedback</span>
+                </a>
+                <a href="messages.html" class="nav-link">
+                    <i class="fas fa-comments"></i>
+                    <span>Messages</span>
+                </a>
+                <a href="settings.html" class="nav-link">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Top Header -->
+            <header class="top-header">
+                <div class="header-left">
+                    <h1>Attendance Record</h1>
+                    <button onclick="refreshAttendance()" class="refresh-btn" title="Refresh attendance data">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                </div>
+                <div class="header-right">
+                    <div class="user-profile">
+                        <span id="user-email">student@email.com</span>
+                        <div class="user-avatar">
+                            <span id="user-initial">S</span>
+                        </div>
+                        <button onclick="logout()" class="logout-btn">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </button>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Attendance Content -->
+            <div class="dashboard-content-area">
+                <!-- Welcome Section -->
+                <div class="welcome-section">
+                    <h2>Attendance Record</h2>
+                    <p>Track your monthly attendance and overall percentage.</p>
+                </div>
+                    
+                    <!-- Attendance Stats -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value" id="overall-attendance">0%</div>
+                            <div class="stat-label">Overall Attendance</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="current-month">0%</div>
+                            <div class="stat-label">Current Month</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="total-days">0</div>
+                            <div class="stat-label">Total Days</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="days-present">0</div>
+                            <div class="stat-label">Days Present</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Attendance Status -->
+                    <div class="info-card">
+                        <div class="card-header">
+                            <i class="fas fa-chart-pie"></i>
+                            <h3>Attendance Status</h3>
+                        </div>
+                        <div class="card-content">
+                            <div class="attendance-status">
+                                <div class="status-item">
+                                    <div class="status-circle excellent"></div>
+                                    <span>Excellent (90%+)</span>
+                                </div>
+                                <div class="status-item">
+                                    <div class="status-circle good"></div>
+                                    <span>Good (75-89%)</span>
+                                </div>
+                                <div class="status-item">
+                                    <div class="status-circle average"></div>
+                                    <span>Average (60-74%)</span>
+                                </div>
+                                <div class="status-item">
+                                    <div class="status-circle poor"></div>
+                                    <span>Poor (Below 60%)</span>
+                                </div>
+                            </div>
+                            <div class="current-status">
+                                <h4>Your Current Status: <span id="attendance-status">Loading...</span></h4>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="attendance-progress" style="width: 0%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Monthly Attendance -->
+                    <div class="info-card">
+                        <div class="card-header">
+                            <i class="fas fa-calendar-alt"></i>
+                            <h3>Monthly Attendance History</h3>
+                        </div>
+                        <div class="card-content">
+                            <div id="attendance-history">
+                                <div class="loading">Loading attendance history...</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Attendance Insights -->
+                    <div class="info-card">
+                        <div class="card-header">
+                            <i class="fas fa-lightbulb"></i>
+                            <h3>Attendance Insights</h3>
+                        </div>
+                        <div class="card-content">
+                            <div id="attendance-insights">
+                                <div class="loading">Loading insights...</div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/api.js"></script>
+    <script>
+        // Check authentication
+        const token = localStorage.getItem('smart_mentor_token');
+        const user = localStorage.getItem('smart_mentor_user');
+        
+        if (!token || !user) {
+            window.location.href = '../landing.html';
+        }
+        
+        const currentUser = JSON.parse(user);
+        
+        // Update user info
+        document.getElementById('user-email').textContent = currentUser.email;
+        document.getElementById('user-initial').textContent = currentUser.email.charAt(0).toUpperCase();
+        
+        // Load attendance data
+        async function loadAttendanceData() {
+            try {
+                // Show loading state
+                const refreshBtn = document.querySelector('.refresh-btn');
+                if (refreshBtn) {
+                    refreshBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                    refreshBtn.disabled = true;
+                }
+                
+                const response = await API.getStudentDashboard();
+                
+                if (response.success) {
+                    const data = response.data;
+                    renderAttendance(data.attendance);
+                    console.log('✅ Attendance data loaded successfully');
+                } else {
+                    showToast('Error loading attendance data', 'error');
+                }
+            } catch (error) {
+                console.error('Error loading attendance:', error);
+                showToast('Error loading attendance data', 'error');
+                renderEmptyState();
+            } finally {
+                // Reset refresh button
+                const refreshBtn = document.querySelector('.refresh-btn');
+                if (refreshBtn) {
+                    refreshBtn.innerHTML = '<i class="fas fa-sync-alt"></i>';
+                    refreshBtn.disabled = false;
+                }
+            }
+        }
+        
+        function renderAttendance(attendance) {
+            const overallPercentage = attendance?.overall || 0;
+            
+            // Update stats
+            document.getElementById('overall-attendance').textContent = Math.round(overallPercentage) + '%';
+            
+            // Get current month data
+            const currentMonth = attendance?.latest;
+            if (currentMonth) {
+                document.getElementById('current-month').textContent = currentMonth.percentage + '%';
+                document.getElementById('total-days').textContent = currentMonth.totalDays;
+                document.getElementById('days-present').textContent = currentMonth.daysPresent;
+            }
+            
+            // Update status
+            updateAttendanceStatus(overallPercentage);
+            
+            // Render history
+            renderAttendanceHistory(attendance?.history || []);
+            
+            // Generate insights
+            generateInsights(attendance);
+        }
+        
+        function updateAttendanceStatus(percentage) {
+            const statusElement = document.getElementById('attendance-status');
+            const progressElement = document.getElementById('attendance-progress');
+            
+            let status, className;
+            
+            if (percentage >= 90) {
+                status = 'Excellent';
+                className = 'badge-success';
+            } else if (percentage >= 75) {
+                status = 'Good';
+                className = 'badge-info';
+            } else if (percentage >= 60) {
+                status = 'Average';
+                className = 'badge-warning';
+            } else {
+                status = 'Poor';
+                className = 'badge-error';
+            }
+            
+            statusElement.innerHTML = `<span class="badge ${className}">${status}</span>`;
+            progressElement.style.width = percentage + '%';
+        }
+        
+        function renderAttendanceHistory(history) {
+            const historyContainer = document.getElementById('attendance-history');
+            
+            if (!history || history.length === 0) {
+                historyContainer.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-calendar-times"></i>
+                        <h3>No Attendance Records</h3>
+                        <p>Your mentor hasn't recorded any attendance yet.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            historyContainer.innerHTML = `
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Month</th>
+                            <th>Year</th>
+                            <th>Days Present</th>
+                            <th>Total Days</th>
+                            <th>Percentage</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${history.map(record => `
+                            <tr>
+                                <td><strong>${record.month}</strong></td>
+                                <td>${record.year}</td>
+                                <td>${record.daysPresent}</td>
+                                <td>${record.totalDays}</td>
+                                <td>${record.percentage}%</td>
+                                <td><span class="badge ${getAttendanceBadgeClass(record.percentage)}">${getAttendanceStatus(record.percentage)}</span></td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+        
+        function generateInsights(attendance) {
+            const insightsContainer = document.getElementById('attendance-insights');
+            const overallPercentage = attendance?.overall || 0;
+            const history = attendance?.history || [];
+            
+            let insights = [];
+            
+            // Overall performance insight
+            if (overallPercentage >= 90) {
+                insights.push({
+                    type: 'success',
+                    icon: 'fas fa-trophy',
+                    message: 'Excellent attendance! Keep up the great work.'
+                });
+            } else if (overallPercentage >= 75) {
+                insights.push({
+                    type: 'info',
+                    icon: 'fas fa-thumbs-up',
+                    message: 'Good attendance record. Try to maintain consistency.'
+                });
+            } else if (overallPercentage >= 60) {
+                insights.push({
+                    type: 'warning',
+                    icon: 'fas fa-exclamation-triangle',
+                    message: 'Your attendance needs improvement. Aim for 75% or higher.'
+                });
+            } else {
+                insights.push({
+                    type: 'error',
+                    icon: 'fas fa-exclamation-circle',
+                    message: 'Critical: Your attendance is below 60%. Please contact your mentor immediately.'
+                });
+            }
+            
+            // Trend analysis
+            if (history.length >= 2) {
+                const recent = history.slice(-2);
+                const trend = recent[1].percentage - recent[0].percentage;
+                
+                if (trend > 5) {
+                    insights.push({
+                        type: 'success',
+                        icon: 'fas fa-arrow-up',
+                        message: 'Great improvement! Your attendance is trending upward.'
+                    });
+                } else if (trend < -5) {
+                    insights.push({
+                        type: 'warning',
+                        icon: 'fas fa-arrow-down',
+                        message: 'Declining trend detected. Focus on regular attendance.'
+                    });
+                }
+            }
+            
+            // Threshold warnings
+            if (overallPercentage < 75) {
+                const needed = Math.ceil((75 - overallPercentage) * 10);
+                insights.push({
+                    type: 'info',
+                    icon: 'fas fa-calculator',
+                    message: `You need approximately ${needed}% more attendance to reach the 75% threshold.`
+                });
+            }
+            
+            insightsContainer.innerHTML = insights.map(insight => `
+                <div class="insight-item ${insight.type}">
+                    <i class="${insight.icon}"></i>
+                    <span>${insight.message}</span>
+                </div>
+            `).join('');
+        }
+        
+        function renderEmptyState() {
+            document.getElementById('attendance-history').innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <h3>Unable to Load Data</h3>
+                    <p>There was an error loading your attendance data. Please try refreshing the page.</p>
+                    <button onclick="loadAttendanceData()" class="btn btn-primary">
+                        <i class="fas fa-refresh"></i>
+                        Retry
+                    </button>
+                </div>
+            `;
+        }
+        
+        function getAttendanceStatus(percentage) {
+            if (percentage >= 90) return 'Excellent';
+            if (percentage >= 75) return 'Good';
+            if (percentage >= 60) return 'Average';
+            return 'Poor';
+        }
+        
+        function getAttendanceBadgeClass(percentage) {
+            if (percentage >= 90) return 'badge-success';
+            if (percentage >= 75) return 'badge-info';
+            if (percentage >= 60) return 'badge-warning';
+            return 'badge-error';
+        }
+        
+        // Logout function
+        function logout() {
+            localStorage.removeItem('smart_mentor_token');
+            localStorage.removeItem('smart_mentor_user');
+            showToast('Logged out successfully', 'success');
+            setTimeout(() => {
+                window.location.href = '../landing.html';
+            }, 1000);
+        }
+        
+        // Toast function
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            const icon = type === 'success' ? 'fas fa-check-circle' : 
+                        type === 'error' ? 'fas fa-exclamation-circle' : 
+                        'fas fa-info-circle';
+            
+            toast.innerHTML = `
+                <i class="${icon}"></i>
+                <span>${message}</span>
+            `;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.transform = 'translateX(0)';
+            }, 100);
+            
+            setTimeout(() => {
+                toast.style.transform = 'translateX(100%)';
+                toast.style.opacity = '0';
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        toast.parentNode.removeChild(toast);
+                    }
+                }, 300);
+            }, 5000);
+        }
+        
+        // Auto-refresh functionality
+        let autoRefreshInterval;
+        
+        function startAutoRefresh() {
+            // Refresh every 30 seconds
+            autoRefreshInterval = setInterval(() => {
+                console.log('🔄 Auto-refreshing attendance data...');
+                loadAttendanceData();
+            }, 30000);
+        }
+        
+        function stopAutoRefresh() {
+            if (autoRefreshInterval) {
+                clearInterval(autoRefreshInterval);
+                autoRefreshInterval = null;
+            }
+        }
+        
+        // Manual refresh function
+        function refreshAttendance() {
+            showToast('Refreshing attendance data...', 'info');
+            loadAttendanceData();
+        }
+        
+        // Load data on page load
+        window.addEventListener('load', () => {
+            loadAttendanceData();
+            startAutoRefresh();
+        });
+        
+        // Stop auto-refresh when page is hidden
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                stopAutoRefresh();
+            } else {
+                startAutoRefresh();
+            }
+        });
+    </script>
+    
+    <style>
+        .modern-dashboard {
+            display: flex;
+            min-height: 100vh;
+            background: #f8fafc;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background: #2d3748;
+            color: white;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #4a5568;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+        
+        .logo i {
+            color: #667eea;
+            font-size: 1.5rem;
+        }
+        
+        .sidebar-nav {
+            padding: 1rem 0;
+        }
+        
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            color: #cbd5e0;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        
+        .nav-link:hover {
+            background: #4a5568;
+            color: white;
+        }
+        
+        .nav-link.active {
+            background: #667eea;
+            color: white;
+        }
+        
+        .main-content {
+            margin-left: 250px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .top-header {
+            background: white;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .header-left h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin: 0;
+        }
+        
+        .refresh-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .refresh-btn:hover {
+            background: #5a67d8;
+            transform: rotate(180deg);
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: #667eea;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .dashboard-content-area {
+            padding: 2rem;
+            flex: 1;
+        }
+        
+        .welcome-section {
+            margin-bottom: 2rem;
+        }
+        
+        .welcome-section h2 {
+            font-size: 1.75rem;
+            color: #2d3748;
+            margin: 0 0 0.5rem 0;
+        }
+        
+        .welcome-section p {
+            color: #718096;
+            margin: 0;
+        }
+        
+        .logout-btn {
+            background: #e53e3e;
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .logout-btn:hover {
+            background: #c53030;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            color: #718096;
+            font-size: 0.875rem;
+        }
+        
+        .info-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .card-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .card-header h3 {
+            margin: 0;
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #2d3748;
+        }
+        
+        .card-content {
+            padding: 1.5rem;
+        }
+        
+        .attendance-status {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .status-circle {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+        }
+        
+        .status-circle.excellent { background: #38a169; }
+        .status-circle.good { background: #667eea; }
+        .status-circle.average { background: #ed8936; }
+        .status-circle.poor { background: #e53e3e; }
+        
+        .current-status h4 {
+            margin-bottom: 0.5rem;
+            color: #2d3748;
+        }
+        
+        .insight-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 12px;
+            border-left: 4px solid;
+        }
+        
+        .insight-item.success {
+            background: rgba(72, 187, 120, 0.1);
+            border-color: #38a169;
+            color: #38a169;
+        }
+        
+        .insight-item.info {
+            background: rgba(102, 126, 234, 0.1);
+            border-color: #667eea;
+            color: #667eea;
+        }
+        
+        .insight-item.warning {
+            background: rgba(237, 137, 54, 0.1);
+            border-color: #ed8936;
+            color: #ed8936;
+        }
+        
+        .insight-item.error {
+            background: rgba(245, 101, 101, 0.1);
+            border-color: #e53e3e;
+            color: #e53e3e;
+        }
+        
+        .insight-item span {
+            color: #4a5568;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .attendance-status {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</body>
+</html>

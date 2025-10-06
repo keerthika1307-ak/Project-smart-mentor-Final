@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Helper - Smart Mentor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        .form-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #495057;
+        }
+        
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            margin: 10px 0;
+            transition: background 0.3s;
+        }
+        
+        .btn:hover {
+            background: #0056b3;
+        }
+        
+        .btn.success {
+            background: #28a745;
+        }
+        
+        .btn.danger {
+            background: #dc3545;
+        }
+        
+        .result {
+            margin: 15px 0;
+            padding: 15px;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+        
+        .result.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .result.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .result.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+        
+        .tips {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .tips h4 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        
+        .tips ul {
+            color: #856404;
+            margin: 0;
+            padding-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📝 Student Registration Helper</h1>
+            <p>Register new students with unique data to avoid conflicts</p>
+        </div>
+        
+        <div class="tips">
+            <h4>💡 Registration Tips</h4>
+            <ul>
+                <li>Use unique email addresses (avoid existing ones)</li>
+                <li>Registration numbers must be unique</li>
+                <li>All required fields must be filled</li>
+                <li>Password must be at least 6 characters</li>
+            </ul>
+        </div>
+        
+        <form id="registrationForm" class="form-section">
+            <h3>Account Information</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="email">Email Address *</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password *</label>
+                    <input type="password" id="password" name="password" required minlength="6">
+                </div>
+            </div>
+            
+            <h3>Personal Information</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="name">Full Name *</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="regNo">Registration Number *</label>
+                    <input type="text" id="regNo" name="regNo" required>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="dateOfBirth">Date of Birth</label>
+                    <input type="date" id="dateOfBirth" name="dateOfBirth">
+                </div>
+                <div class="form-group">
+                    <label for="gender">Gender</label>
+                    <select id="gender" name="gender">
+                        <option value="">Select Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="mobile">Mobile Number *</label>
+                    <input type="tel" id="mobile" name="mobile" required>
+                </div>
+                <div class="form-group">
+                    <label for="address">Address</label>
+                    <input type="text" id="address" name="address">
+                </div>
+            </div>
+            
+            <h3>Parent Information</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="fatherName">Father's Name</label>
+                    <input type="text" id="fatherName" name="fatherName">
+                </div>
+                <div class="form-group">
+                    <label for="fatherOccupation">Father's Occupation</label>
+                    <input type="text" id="fatherOccupation" name="fatherOccupation">
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="motherName">Mother's Name</label>
+                    <input type="text" id="motherName" name="motherName">
+                </div>
+                <div class="form-group">
+                    <label for="motherOccupation">Mother's Occupation</label>
+                    <input type="text" id="motherOccupation" name="motherOccupation">
+                </div>
+            </div>
+            
+            <button type="submit" class="btn">Register Student</button>
+        </form>
+        
+        <div id="results"></div>
+        
+        <div style="text-align: center; margin-top: 30px;">
+            <button class="btn success" onclick="generateSampleData()">Fill Sample Data</button>
+            <button class="btn" onclick="clearForm()">Clear Form</button>
+            <button class="btn" onclick="goToMainApp()">Go to Main App</button>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:3001/api';
+        
+        function addResult(message, type = 'info') {
+            const container = document.getElementById('results');
+            const div = document.createElement('div');
+            div.className = `result ${type}`;
+            div.innerHTML = message;
+            container.appendChild(div);
+        }
+        
+        function clearResults() {
+            document.getElementById('results').innerHTML = '';
+        }
+        
+        function generateSampleData() {
+            const timestamp = Date.now();
+            const randomNum = Math.floor(Math.random() * 1000);
+            
+            document.getElementById('email').value = `student${randomNum}@example.com`;
+            document.getElementById('password').value = 'student123';
+            document.getElementById('name').value = `Test Student ${randomNum}`;
+            document.getElementById('regNo').value = `STU${timestamp.toString().slice(-6)}`;
+            document.getElementById('dateOfBirth').value = '2000-01-15';
+            document.getElementById('gender').value = 'Male';
+            document.getElementById('mobile').value = `98765${randomNum.toString().padStart(5, '0')}`;
+            document.getElementById('address').value = 'Test Address, City, State';
+            document.getElementById('fatherName').value = 'Test Father';
+            document.getElementById('fatherOccupation').value = 'Engineer';
+            document.getElementById('motherName').value = 'Test Mother';
+            document.getElementById('motherOccupation').value = 'Teacher';
+            
+            addResult('✅ Sample data generated with unique values!', 'success');
+        }
+        
+        function clearForm() {
+            document.getElementById('registrationForm').reset();
+            clearResults();
+        }
+        
+        function goToMainApp() {
+            window.location.href = '/';
+        }
+        
+        document.getElementById('registrationForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            submitBtn.classList.add('loading');
+            submitBtn.textContent = 'Registering...';
+            
+            clearResults();
+            addResult('📝 Registering student...', 'info');
+            
+            const formData = new FormData(e.target);
+            const data = {
+                email: formData.get('email'),
+                password: formData.get('password'),
+                role: 'student',
+                studentData: {
+                    name: formData.get('name'),
+                    regNo: formData.get('regNo'),
+                    dateOfBirth: formData.get('dateOfBirth'),
+                    gender: formData.get('gender'),
+                    mobile: formData.get('mobile'),
+                    address: formData.get('address'),
+                    fatherName: formData.get('fatherName'),
+                    fatherOccupation: formData.get('fatherOccupation'),
+                    motherName: formData.get('motherName'),
+                    motherOccupation: formData.get('motherOccupation')
+                }
+            };
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    mode: 'cors',
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok && result.success) {
+                    addResult('✅ Student registered successfully!', 'success');
+                    addResult(`👤 Student: ${data.studentData.name}`, 'success');
+                    addResult(`📧 Email: ${data.email}`, 'success');
+                    addResult(`🔑 Registration Number: ${data.studentData.regNo}`, 'success');
+                    addResult('💡 You can now login with these credentials in the main app', 'info');
+                } else {
+                    addResult(`❌ Registration failed: ${result.message}`, 'error');
+                    
+                    if (result.message.includes('already exists')) {
+                        addResult('💡 Try using a different email address or registration number', 'info');
+                    }
+                }
+            } catch (error) {
+                addResult(`❌ Registration error: ${error.message}`, 'error');
+                addResult('💡 Make sure the backend server is running', 'info');
+            } finally {
+                submitBtn.classList.remove('loading');
+                submitBtn.textContent = 'Register Student';
+            }
+        });
+        
+        // Auto-generate sample data on load
+        window.addEventListener('load', () => {
+            setTimeout(generateSampleData, 1000);
+        });
+    </script>
+</body>
+</html>

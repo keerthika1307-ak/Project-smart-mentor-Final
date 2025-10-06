@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Feedback - Smart Mentor</title>
+    <link rel="stylesheet" href="../css/styles.css?v=2.0">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+</head>
+<body>
+    <div class="modern-dashboard">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Smart Mentor</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-link">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="students.html" class="nav-link">
+                    <i class="fas fa-users"></i>
+                    <span>Students</span>
+                </a>
+                <a href="academics.html" class="nav-link">
+                    <i class="fas fa-book"></i>
+                    <span>Academics</span>
+                </a>
+                <a href="attendance.html" class="nav-link">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>Attendance</span>
+                </a>
+                <a href="feedback.html" class="nav-link active">
+                    <i class="fas fa-comment-alt"></i>
+                    <span>Feedback</span>
+                </a>
+                <a href="messages.html" class="nav-link">
+                    <i class="fas fa-envelope"></i>
+                    <span>Messages</span>
+                </a>
+                <a href="blackmarks.html" class="nav-link">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>Blackmarks</span>
+                </a>
+                <a href="notifications.html" class="nav-link">
+                    <i class="fas fa-bell"></i>
+                    <span>Notifications</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Top Header -->
+            <header class="top-header">
+                <div class="header-left">
+                    <h1>AI Feedback</h1>
+                </div>
+                <div class="header-right">
+                    <div class="user-profile">
+                        <span id="user-email">admin@smartmentor.com</span>
+                        <div class="user-avatar">
+                            <span id="user-initial">A</span>
+                        </div>
+                        <button onclick="logout()" class="logout-btn">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </button>
+                </div>
+            </header>
+            
+            <!-- Feedback Content -->
+            <div class="dashboard-content-area">
+                
+                <!-- Generate Feedback Section -->
+                <div class="action-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-robot"></i> Generate AI Feedback</h2>
+                    </div>
+                    
+                    <form id="feedback-form" class="feedback-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="feedback-student-select">Select Student</label>
+                                <select id="feedback-student-select" required>
+                                    <option value="">Choose a student...</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="feedback-type">Feedback Type</label>
+                                <select id="feedback-type" required>
+                                    <option value="">Select type...</option>
+                                    <option value="academic">Academic Performance</option>
+                                    <option value="attendance">Attendance Analysis</option>
+                                    <option value="behavior">Behavioral Assessment</option>
+                                    <option value="overall">Overall Progress</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-magic"></i>
+                            Generate AI Feedback
+                        </button>
+                    </form>
+                </div>
+                
+                <!-- AI Feedback Display -->
+                <div id="feedback-display" class="feedback-display" style="display: none;">
+                    <div class="section-header">
+                        <h2><i class="fas fa-comment-dots"></i> Generated Feedback</h2>
+                        <button class="btn btn-secondary" onclick="saveFeedback()">
+                            <i class="fas fa-save"></i>
+                            Save Feedback
+                        </button>
+                    </div>
+                    
+                    <div class="feedback-content">
+                        <div class="student-info">
+                            <div class="student-avatar">
+                                <span id="feedback-student-initial">S</span>
+                            </div>
+                            <div class="student-details">
+                                <h3 id="feedback-student-name">Student Name</h3>
+                                <span id="feedback-student-reg">Registration Number</span>
+                            </div>
+                        </div>
+                        
+                        <div class="feedback-text" id="feedback-text">
+                            <!-- AI generated feedback will appear here -->
+                        </div>
+                        
+                        <div class="feedback-actions">
+                            <button class="btn btn-outline" onclick="regenerateFeedback()">
+                                <i class="fas fa-redo"></i>
+                                Regenerate
+                            </button>
+                            <button class="btn btn-primary" onclick="sendFeedbackToStudent()">
+                                <i class="fas fa-paper-plane"></i>
+                                Send to Student
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Recent Feedback -->
+                <div class="history-section">
+                    <h2><i class="fas fa-history"></i> Recent Feedback</h2>
+                    <div id="feedback-history">
+                        <div class="loading">Loading recent feedback...</div>
+                    </div>
+                </div>
+                
+                <!-- AI Insights -->
+                <div class="insights-section">
+                    <h2><i class="fas fa-lightbulb"></i> AI Insights</h2>
+                    <div class="insights-grid">
+                        <div class="insight-card">
+                            <div class="insight-icon blue">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div class="insight-content">
+                                <h3>Performance Trends</h3>
+                                <p>AI analyzes academic performance patterns to identify improvement areas and strengths.</p>
+                            </div>
+                        </div>
+                        <div class="insight-card">
+                            <div class="insight-icon green">
+                                <i class="fas fa-calendar-check"></i>
+                            </div>
+                            <div class="insight-content">
+                                <h3>Attendance Patterns</h3>
+                                <p>Smart attendance analysis helps identify students who need additional support.</p>
+                            </div>
+                        </div>
+                        <div class="insight-card">
+                            <div class="insight-icon purple">
+                                <i class="fas fa-brain"></i>
+                            </div>
+                            <div class="insight-content">
+                                <h3>Behavioral Analysis</h3>
+                                <p>AI evaluates behavioral data to provide personalized guidance and recommendations.</p>
+                            </div>
+                        </div>
+                        <div class="insight-card">
+                            <div class="insight-icon orange">
+                                <i class="fas fa-target"></i>
+                            </div>
+                            <div class="insight-content">
+                                <h3>Goal Setting</h3>
+                                <p>Intelligent goal recommendations based on individual student capabilities and progress.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/api.js"></script>
+    <script>
+        // Check authentication
+        const token = localStorage.getItem('smart_mentor_token');
+        const user = localStorage.getItem('smart_mentor_user');
+        
+        if (!token || !user) {
+            window.location.href = '../landing.html';
+        }
+        
+        const currentUser = JSON.parse(user);
+        
+        // Check if user is admin
+        if (currentUser.role !== 'admin' && currentUser.role !== 'mentor') {
+            window.location.href = '../landing.html';
+        }
+        
+        // Update user info
+        document.getElementById('user-email').textContent = currentUser.email;
+        document.getElementById('user-initial').textContent = currentUser.email.charAt(0).toUpperCase();
+        
+        let currentFeedbackData = null;
+        
+        // Load students for dropdown
+        async function loadStudents() {
+            try {
+                const response = await API.getAllStudents();
+                if (response.success) {
+                    const studentSelect = document.getElementById('feedback-student-select');
+                    studentSelect.innerHTML = '<option value="">Choose a student...</option>';
+                    
+                    response.data.students.forEach(student => {
+                        const option = document.createElement('option');
+                        option.value = student._id;
+                        option.textContent = `${student.name} (${student.regNo})`;
+                        option.dataset.name = student.name;
+                        option.dataset.regNo = student.regNo;
+                        studentSelect.appendChild(option);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading students:', error);
+            }
+        }
+        
+        // Handle feedback form submission
+        document.getElementById('feedback-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const studentId = document.getElementById('feedback-student-select').value;
+            const feedbackType = document.getElementById('feedback-type').value;
+            const selectedOption = document.getElementById('feedback-student-select').selectedOptions[0];
+            
+            if (!studentId || !feedbackType) {
+                showToast('Please select both student and feedback type', 'warning');
+                return;
+            }
+            
+            // Show loading
+            showToast('Generating AI feedback...', 'info');
+            
+            try {
+                // Get student data for AI analysis
+                const studentResponse = await API.getMentorStudent(studentId);
+                if (studentResponse.success) {
+                    const studentData = studentResponse.data;
+                    const feedback = generateAIFeedback(studentData, feedbackType);
+                    
+                    // Display feedback
+                    displayFeedback(studentData, feedback, feedbackType);
+                    showToast('AI feedback generated successfully', 'success');
+                }
+            } catch (error) {
+                showToast('Error generating feedback: ' + error.message, 'error');
+            }
+        });
+        
+        // Generate AI feedback (simulated)
+        function generateAIFeedback(studentData, type) {
+            const name = studentData.personalInfo.name;
+            const cgpa = studentData.academics.cgpa || 0;
+            const attendance = studentData.attendance.overall || 0;
+            const blackmarks = studentData.blackmarks.length || 0;
+            
+            let feedback = '';
+            
+            switch (type) {
+                case 'academic':
+                    if (cgpa >= 8) {
+                        feedback = `Excellent work, ${name}! Your CGPA of ${cgpa} demonstrates outstanding academic performance. Continue to challenge yourself with advanced topics and consider mentoring peers who might benefit from your expertise.`;
+                    } else if (cgpa >= 6) {
+                        feedback = `Good progress, ${name}. Your CGPA of ${cgpa} shows solid understanding. Focus on strengthening weaker subjects and consider forming study groups to enhance learning.`;
+                    } else {
+                        feedback = `${name}, your current CGPA of ${cgpa} indicates room for improvement. I recommend creating a structured study schedule, seeking help from teachers, and focusing on fundamental concepts.`;
+                    }
+                    break;
+                    
+                case 'attendance':
+                    if (attendance >= 90) {
+                        feedback = `Outstanding attendance, ${name}! Your ${attendance}% attendance rate shows excellent commitment. This consistency will greatly benefit your academic progress.`;
+                    } else if (attendance >= 75) {
+                        feedback = `Good attendance record, ${name}. Your ${attendance}% attendance is acceptable, but try to maintain consistency to avoid missing important lessons.`;
+                    } else {
+                        feedback = `${name}, your attendance of ${attendance}% needs immediate attention. Regular attendance is crucial for academic success. Please discuss any challenges with your mentors.`;
+                    }
+                    break;
+                    
+                case 'behavior':
+                    if (blackmarks === 0) {
+                        feedback = `Exemplary behavior, ${name}! You've maintained a clean disciplinary record, which reflects your maturity and respect for school values. Keep up the excellent conduct.`;
+                    } else if (blackmarks <= 2) {
+                        feedback = `${name}, you have ${blackmarks} blackmark(s). While this is manageable, focus on improving your behavior and following school guidelines more carefully.`;
+                    } else {
+                        feedback = `${name}, your ${blackmarks} blackmarks indicate serious behavioral concerns. It's important to reflect on your actions and work with mentors to develop better habits.`;
+                    }
+                    break;
+                    
+                case 'overall':
+                    feedback = `Overall Assessment for ${name}:\n\nAcademic Performance: CGPA ${cgpa} - ${cgpa >= 7 ? 'Strong' : cgpa >= 5 ? 'Satisfactory' : 'Needs Improvement'}\nAttendance: ${attendance}% - ${attendance >= 85 ? 'Excellent' : attendance >= 75 ? 'Good' : 'Poor'}\nBehavior: ${blackmarks === 0 ? 'Exemplary' : blackmarks <= 2 ? 'Acceptable' : 'Concerning'}\n\nRecommendations: ${cgpa < 6 ? 'Focus on academic improvement through structured study. ' : ''}${attendance < 80 ? 'Improve attendance consistency. ' : ''}${blackmarks > 0 ? 'Work on behavioral development. ' : ''}Continue your positive efforts and seek guidance when needed.`;
+                    break;
+            }
+            
+            return feedback;
+        }
+        
+        // Display generated feedback
+        function displayFeedback(studentData, feedback, type) {
+            currentFeedbackData = { studentData, feedback, type };
+            
+            document.getElementById('feedback-student-initial').textContent = studentData.personalInfo.name.charAt(0).toUpperCase();
+            document.getElementById('feedback-student-name').textContent = studentData.personalInfo.name;
+            document.getElementById('feedback-student-reg').textContent = studentData.personalInfo.regNo;
+            document.getElementById('feedback-text').innerHTML = feedback.replace(/\n/g, '<br>');
+            
+            document.getElementById('feedback-display').style.display = 'block';
+        }
+        
+        // Regenerate feedback
+        function regenerateFeedback() {
+            if (currentFeedbackData) {
+                const newFeedback = generateAIFeedback(currentFeedbackData.studentData, currentFeedbackData.type);
+                document.getElementById('feedback-text').innerHTML = newFeedback.replace(/\n/g, '<br>');
+                currentFeedbackData.feedback = newFeedback;
+                showToast('Feedback regenerated', 'success');
+            }
+        }
+        
+        // Save feedback
+        function saveFeedback() {
+            if (currentFeedbackData) {
+                // In a real app, this would save to the database
+                showToast('Feedback saved successfully', 'success');
+                loadFeedbackHistory();
+            }
+        }
+        
+        // Send feedback to student
+        async function sendFeedbackToStudent() {
+            if (currentFeedbackData) {
+                try {
+                    const response = await API.saveFeedback(currentFeedbackData.studentData._id, {
+                        feedback: currentFeedbackData.feedback,
+                        type: currentFeedbackData.type
+                    });
+                    
+                    if (response.success) {
+                        showToast('Feedback sent to student successfully', 'success');
+                        loadFeedbackHistory();
+                    } else {
+                        showToast('Error sending feedback: ' + response.message, 'error');
+                    }
+                } catch (error) {
+                    showToast('Error sending feedback: ' + error.message, 'error');
+                }
+            }
+        }
+        
+        // Load feedback history
+        async function loadFeedbackHistory() {
+            const historyContainer = document.getElementById('feedback-history');
+            
+            try {
+                historyContainer.innerHTML = '<div class="loading">Loading recent feedback...</div>';
+                
+                console.log('🔍 Loading recent feedback...');
+                const response = await API.getRecentFeedback();
+                console.log('📋 Recent feedback response:', response);
+                
+                if (response.success && response.data.length > 0) {
+                    historyContainer.innerHTML = response.data.map(feedback => `
+                        <div class="feedback-history-item">
+                            <div class="history-header">
+                                <div class="history-student">${feedback.studentName} (${feedback.studentRegNo})</div>
+                                <div class="history-date">${new Date(feedback.createdAt || feedback.lastUpdated).toLocaleDateString()}</div>
+                            </div>
+                            <div class="history-type">${feedback.feedbackType || 'General'}</div>
+                            <div class="history-preview">${feedback.preview}</div>
+                        </div>
+                    `).join('');
+                } else {
+                    historyContainer.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-comment-alt"></i>
+                            <p>No feedback sent yet. Generate and send feedback to students to see history here.</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('❌ Error loading feedback history:', error);
+                console.error('Error details:', error.response || error.message);
+                historyContainer.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>Error loading feedback history. Please try again.</p>
+                        <small>Check console for details</small>
+                    </div>
+                `;
+            }
+        }
+        
+        // Logout function
+        function logout() {
+            localStorage.removeItem('smart_mentor_token');
+            localStorage.removeItem('smart_mentor_user');
+            showToast('Logged out successfully', 'success');
+            setTimeout(() => {
+                window.location.href = '../landing.html';
+            }, 1000);
+        }
+        
+        // Toast function
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            const icon = type === 'success' ? 'fas fa-check-circle' : 
+                        type === 'error' ? 'fas fa-exclamation-circle' : 
+                        type === 'warning' ? 'fas fa-exclamation-triangle' :
+                        'fas fa-info-circle';
+            
+            toast.innerHTML = `
+                <i class="${icon}"></i>
+                <span>${message}</span>
+            `;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.transform = 'translateX(0)';
+            }, 100);
+            
+            setTimeout(() => {
+                toast.style.transform = 'translateX(100%)';
+                toast.style.opacity = '0';
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        toast.parentNode.removeChild(toast);
+                    }
+                }, 300);
+            }, 5000);
+        }
+        
+        // Remove unwanted titles function
+        function removeUnwantedTitles() {
+            // Remove any h1 elements that contain module names
+            const h1Elements = document.querySelectorAll('h1');
+            h1Elements.forEach(h1 => {
+                const text = h1.textContent || h1.innerText;
+                if (text.includes('AI Feedback System') || 
+                    text.includes('Generate AI Feedback') || 
+                    text.includes('Attendance Management') || 
+                    text.includes('Blackmarks Management') || 
+                    text.includes('Messages') || 
+                    text.includes('Smart Mentor') && h1.closest('.dashboard-content-area')) {
+                    h1.style.display = 'none';
+                    h1.remove();
+                }
+            });
+            
+            // Also remove any standalone text nodes that might contain titles
+            const walker = document.createTreeWalker(
+                document.querySelector('.dashboard-content-area') || document.body,
+                NodeFilter.SHOW_TEXT,
+                null,
+                false
+            );
+            
+            let node;
+            const textNodesToRemove = [];
+            while (node = walker.nextNode()) {
+                const text = node.textContent.trim();
+                if (text === 'AI Feedback System' || text === 'Generate AI Feedback') {
+                    textNodesToRemove.push(node);
+                }
+            }
+            
+            textNodesToRemove.forEach(node => {
+                if (node.parentNode) {
+                    node.parentNode.removeChild(node);
+                }
+            });
+        }
+        
+        // Load data on page load
+        window.addEventListener('load', () => {
+            loadStudents();
+            loadFeedbackHistory();
+            
+            // Remove unwanted titles after a short delay
+            setTimeout(removeUnwantedTitles, 100);
+            
+            // Also run it periodically to catch any dynamically added titles
+            setInterval(removeUnwantedTitles, 1000);
+        });
+    </script>
+    
+    <style>
+        /* Modern Dashboard Layout */
+        .modern-dashboard {
+            display: flex;
+            min-height: 100vh;
+            background: #f7fafc;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background: white;
+            box-shadow: 2px 0 4px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+        
+        .sidebar-nav {
+            flex: 1;
+            padding: 1rem 0;
+        }
+        
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            color: #4a5568;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        
+        .nav-link:hover {
+            background: #f7fafc;
+            color: #667eea;
+        }
+        
+        .nav-link.active {
+            background: #667eea;
+            color: white;
+        }
+        
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .top-header {
+            background: white;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header-left h1 {
+            font-size: 1.5rem;
+            color: #2d3748;
+            margin: 0;
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #667eea;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .logout-btn {
+            background: #f56565;
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .logout-btn:hover {
+            background: #e53e3e;
+        }
+        
+        .dashboard-content-area {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+        
+        .welcome-section {
+            margin-bottom: 2rem;
+        }
+        
+        .welcome-section h2 {
+            font-size: 1.75rem;
+            color: #2d3748;
+            margin: 0 0 0.5rem 0;
+        }
+        
+        .welcome-section p {
+            color: #718096;
+            margin: 0;
+        }
+        
+        .action-section, .history-section, .insights-section {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .feedback-display {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border: 2px solid #667eea;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .section-header h2 {
+            margin: 0;
+            color: #2d3748;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .feedback-form .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #374151;
+        }
+        
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 0.875rem;
+        }
+        
+        .feedback-content {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .student-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 8px;
+        }
+        
+        .student-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #667eea;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 1.25rem;
+        }
+        
+        .student-details h3 {
+            margin: 0;
+            color: #2d3748;
+        }
+        
+        .student-details span {
+            color: #718096;
+            font-size: 0.875rem;
+        }
+        
+        .feedback-text {
+            padding: 1.5rem;
+            background: #f7fafc;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            line-height: 1.6;
+            color: #2d3748;
+            font-size: 1rem;
+        }
+        
+        .feedback-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+        
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .insight-card {
+            display: flex;
+            gap: 1rem;
+            padding: 1.5rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            border-left: 4px solid;
+        }
+        
+        .insight-card:nth-child(1) { border-left-color: #3182ce; }
+        .insight-card:nth-child(2) { border-left-color: #38a169; }
+        .insight-card:nth-child(3) { border-left-color: #805ad5; }
+        .insight-card:nth-child(4) { border-left-color: #ed8936; }
+        
+        .insight-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            flex-shrink: 0;
+        }
+        
+        .insight-icon.blue { background: #3182ce; }
+        .insight-icon.green { background: #38a169; }
+        .insight-icon.purple { background: #805ad5; }
+        .insight-icon.orange { background: #ed8936; }
+        
+        .insight-content h3 {
+            margin: 0 0 0.5rem 0;
+            color: #2d3748;
+            font-size: 1.125rem;
+        }
+        
+        .insight-content p {
+            margin: 0;
+            color: #718096;
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+        
+        .feedback-history-item {
+            padding: 1rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+        
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .history-student {
+            font-weight: 600;
+            color: #2d3748;
+        }
+        
+        .history-date {
+            font-size: 0.875rem;
+            color: #718096;
+        }
+        
+        .history-type {
+            font-size: 0.875rem;
+            color: #667eea;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+        
+        .history-preview {
+            color: #4a5568;
+            font-size: 0.875rem;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: #718096;
+        }
+        
+        .empty-state i {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #718096;
+        }
+        
+        /* Hide browser breadcrumb navigation and module titles */
+        .breadcrumb, .nav-breadcrumb, [class*="breadcrumb"] {
+            display: none !important;
+        }
+        
+        /* Aggressively hide all unwanted titles */
+        body > h1:first-of-type,
+        .main-content > h1:first-child,
+        .dashboard-content-area > h1:first-child,
+        h1:contains("AI Feedback System"),
+        h1:contains("Generate AI Feedback"),
+        h1:contains("Attendance Management"),
+        h1:contains("Blackmarks Management"),
+        h1:contains("Messages") {
+            display: none !important;
+            visibility: hidden !important;
+            height: 0 !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+        
+        /* Force hide any h1 that appears right after header */
+        .top-header + * h1:first-child,
+        .dashboard-content-area h1:first-child {
+            display: none !important;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #d1d5db;
+            color: #374151;
+        }
+        
+        .btn-outline:hover {
+            background: #f9fafb;
+        }
+        
+        /* Button styles */
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #5a67d8;
+        }
+        
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+        
+        .btn-secondary:hover {
+            background: #cbd5e0;
+        }
+        
+        /* Hide unwanted elements */
+        body {
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+    </style>
+</body>
+</html>

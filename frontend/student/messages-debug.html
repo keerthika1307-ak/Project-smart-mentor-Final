@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messages Debug - Smart Mentor</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .debug-section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; border-radius: 5px; }
+        .success { background: #d4edda; border-color: #c3e6cb; }
+        .error { background: #f8d7da; border-color: #f5c6cb; }
+        .info { background: #d1ecf1; border-color: #bee5eb; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 3px; overflow-x: auto; }
+        button { padding: 10px 15px; margin: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Student Messages Debug Page</h1>
+    
+    <div class="debug-section info">
+        <h3>Authentication Status</h3>
+        <div id="auth-status">Checking...</div>
+    </div>
+    
+    <div class="debug-section info">
+        <h3>API Tests</h3>
+        <button onclick="testConversations()">Test Conversations API</button>
+        <button onclick="testMentors()">Test Mentors API</button>
+        <button onclick="testDashboard()">Test Dashboard API</button>
+        <div id="api-results"></div>
+    </div>
+    
+    <div class="debug-section info">
+        <h3>Debug Logs</h3>
+        <div id="debug-logs"></div>
+    </div>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/api.js"></script>
+    <script>
+        // Check authentication
+        const token = localStorage.getItem('smart_mentor_token');
+        const user = localStorage.getItem('smart_mentor_user');
+        
+        function log(message, type = 'info') {
+            const logsDiv = document.getElementById('debug-logs');
+            const timestamp = new Date().toLocaleTimeString();
+            logsDiv.innerHTML += `<div class="${type}">[${timestamp}] ${message}</div>`;
+        }
+        
+        function updateAuthStatus() {
+            const authDiv = document.getElementById('auth-status');
+            
+            if (!token || !user) {
+                authDiv.innerHTML = '<div class="error">❌ Not authenticated - missing token or user data</div>';
+                return false;
+            }
+            
+            try {
+                const currentUser = JSON.parse(user);
+                authDiv.innerHTML = `
+                    <div class="success">✅ Authenticated</div>
+                    <pre>User: ${JSON.stringify(currentUser, null, 2)}</pre>
+                    <pre>Token: ${token.substring(0, 50)}...</pre>
+                `;
+                return true;
+            } catch (error) {
+                authDiv.innerHTML = '<div class="error">❌ Invalid user data in localStorage</div>';
+                return false;
+            }
+        }
+        
+        async function testConversations() {
+            log('Testing conversations API...', 'info');
+            try {
+                const response = await API.getConversations();
+                log(`Conversations API: ${response.success ? 'SUCCESS' : 'FAILED'}`, response.success ? 'success' : 'error');
+                log(`Response: ${JSON.stringify(response, null, 2)}`, 'info');
+                
+                document.getElementById('api-results').innerHTML += `
+                    <div class="${response.success ? 'success' : 'error'}">
+                        <h4>Conversations API</h4>
+                        <pre>${JSON.stringify(response, null, 2)}</pre>
+                    </div>
+                `;
+            } catch (error) {
+                log(`Conversations API ERROR: ${error.message}`, 'error');
+                document.getElementById('api-results').innerHTML += `
+                    <div class="error">
+                        <h4>Conversations API Error</h4>
+                        <pre>${error.message}</pre>
+                    </div>
+                `;
+            }
+        }
+        
+        async function testMentors() {
+            log('Testing mentors API...', 'info');
+            try {
+                const response = await API.get('/users/mentors');
+                log(`Mentors API: ${response.success ? 'SUCCESS' : 'FAILED'}`, response.success ? 'success' : 'error');
+                
+                document.getElementById('api-results').innerHTML += `
+                    <div class="${response.success ? 'success' : 'error'}">
+                        <h4>Mentors API</h4>
+                        <pre>${JSON.stringify(response, null, 2)}</pre>
+                    </div>
+                `;
+            } catch (error) {
+                log(`Mentors API ERROR: ${error.message}`, 'error');
+                document.getElementById('api-results').innerHTML += `
+                    <div class="error">
+                        <h4>Mentors API Error</h4>
+                        <pre>${error.message}</pre>
+                    </div>
+                `;
+            }
+        }
+        
+        async function testDashboard() {
+            log('Testing dashboard API...', 'info');
+            try {
+                const response = await API.getStudentDashboard();
+                log(`Dashboard API: ${response.success ? 'SUCCESS' : 'FAILED'}`, response.success ? 'success' : 'error');
+                
+                document.getElementById('api-results').innerHTML += `
+                    <div class="${response.success ? 'success' : 'error'}">
+                        <h4>Dashboard API</h4>
+                        <pre>${JSON.stringify(response, null, 2)}</pre>
+                    </div>
+                `;
+            } catch (error) {
+                log(`Dashboard API ERROR: ${error.message}`, 'error');
+                document.getElementById('api-results').innerHTML += `
+                    <div class="error">
+                        <h4>Dashboard API Error</h4>
+                        <pre>${error.message}</pre>
+                    </div>
+                `;
+            }
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateAuthStatus();
+            log('Debug page loaded', 'success');
+        });
+    </script>
+</body>
+</html>

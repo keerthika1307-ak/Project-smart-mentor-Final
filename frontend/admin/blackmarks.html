@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blackmarks Management - Smart Mentor</title>
+    <link rel="stylesheet" href="../css/styles.css?v=2.0">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+</head>
+<body>
+    <div class="modern-dashboard">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Smart Mentor</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-link">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="students.html" class="nav-link">
+                    <i class="fas fa-users"></i>
+                    <span>Students</span>
+                </a>
+                <a href="academics.html" class="nav-link">
+                    <i class="fas fa-book"></i>
+                    <span>Academics</span>
+                </a>
+                <a href="attendance.html" class="nav-link">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>Attendance</span>
+                </a>
+                <a href="feedback.html" class="nav-link">
+                    <i class="fas fa-comment-alt"></i>
+                    <span>Feedback</span>
+                </a>
+                <a href="messages.html" class="nav-link">
+                    <i class="fas fa-envelope"></i>
+                    <span>Messages</span>
+                </a>
+                <a href="blackmarks.html" class="nav-link active">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>Blackmarks</span>
+                </a>
+                <a href="notifications.html" class="nav-link">
+                    <i class="fas fa-bell"></i>
+                    <span>Notifications</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Top Header -->
+            <header class="top-header">
+                <div class="header-left">
+                    <h1>Blackmarks Management</h1>
+                </div>
+                <div class="header-right">
+                    <div class="user-profile">
+                        <span id="user-email">admin@smartmentor.com</span>
+                        <div class="user-avatar">
+                            <span id="user-initial">A</span>
+                        </div>
+                        <button onclick="logout()" class="logout-btn">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </button>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Blackmarks Content -->
+            <div class="dashboard-content-area">
+                <!-- Assign Blackmark Section -->
+                <div class="action-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-flag"></i> Assign Blackmark</h2>
+                    </div>
+                    
+                    <form id="blackmark-form" class="blackmark-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="blackmark-student-select">Select Student</label>
+                                <select id="blackmark-student-select" required>
+                                    <option value="">Choose a student...</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="blackmark-severity">Severity</label>
+                                <select id="blackmark-severity" required>
+                                    <option value="">Select severity...</option>
+                                    <option value="Low">Low</option>
+                                    <option value="Medium">Medium</option>
+                                    <option value="High">High</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="blackmark-reason">Reason</label>
+                            <textarea id="blackmark-reason" rows="3" placeholder="Describe the reason for this blackmark..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-flag"></i>
+                            Assign Blackmark
+                        </button>
+                    </form>
+                </div>
+                
+                <!-- Blackmarks Overview -->
+                <div class="overview-section">
+                    <h2><i class="fas fa-chart-bar"></i> Overview</h2>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon red">
+                                <i class="fas fa-flag"></i>
+                            </div>
+                            <div class="stat-info">
+                                <div class="stat-number" id="total-blackmarks">0</div>
+                                <div class="stat-label">Total Blackmarks</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon orange">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <div class="stat-info">
+                                <div class="stat-number" id="high-severity">0</div>
+                                <div class="stat-label">High Severity</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon yellow">
+                                <i class="fas fa-exclamation-circle"></i>
+                            </div>
+                            <div class="stat-info">
+                                <div class="stat-number" id="medium-severity">0</div>
+                                <div class="stat-label">Medium Severity</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon blue">
+                                <i class="fas fa-info-circle"></i>
+                            </div>
+                            <div class="stat-info">
+                                <div class="stat-number" id="low-severity">0</div>
+                                <div class="stat-label">Low Severity</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Recent Blackmarks -->
+                <div class="records-section">
+                    <h2><i class="fas fa-history"></i> Recent Records</h2>
+                    <div id="blackmarks-list">
+                        <div class="loading">Loading blackmarks...</div>
+                    </div>
+                </div>
+                
+                <!-- Severity Guidelines -->
+                <div class="guidelines-section">
+                    <h2><i class="fas fa-info-circle"></i> Severity Guidelines</h2>
+                    <div class="guidelines-grid">
+                        <div class="guideline-card low">
+                            <div class="guideline-header">
+                                <i class="fas fa-info-circle"></i>
+                                <h3>Low Severity</h3>
+                            </div>
+                            <ul>
+                                <li>Minor uniform violations</li>
+                                <li>Late submission of assignments</li>
+                                <li>Talking during class</li>
+                                <li>Not bringing required materials</li>
+                            </ul>
+                        </div>
+                        <div class="guideline-card medium">
+                            <div class="guideline-header">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <h3>Medium Severity</h3>
+                            </div>
+                            <ul>
+                                <li>Repeated tardiness</li>
+                                <li>Disruptive behavior</li>
+                                <li>Cheating on assignments</li>
+                                <li>Disrespect to peers</li>
+                            </ul>
+                        </div>
+                        <div class="guideline-card high">
+                            <div class="guideline-header">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <h3>High Severity</h3>
+                            </div>
+                            <ul>
+                                <li>Fighting or violence</li>
+                                <li>Bullying or harassment</li>
+                                <li>Vandalism</li>
+                                <li>Serious misconduct</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/api.js"></script>
+    <script>
+        // Check authentication
+        const token = localStorage.getItem('smart_mentor_token');
+        const user = localStorage.getItem('smart_mentor_user');
+        
+        if (!token || !user) {
+            window.location.href = '../landing.html';
+        }
+        
+        const currentUser = JSON.parse(user);
+        
+        // Check if user is admin
+        if (currentUser.role !== 'admin' && currentUser.role !== 'mentor') {
+            window.location.href = '../landing.html';
+        }
+        
+        // Update user info
+        document.getElementById('user-email').textContent = currentUser.email;
+        document.getElementById('user-initial').textContent = currentUser.email.charAt(0).toUpperCase();
+        
+        // Load students for dropdown
+        async function loadStudents() {
+            try {
+                const response = await API.getAllStudents();
+                if (response.success) {
+                    const studentSelect = document.getElementById('blackmark-student-select');
+                    studentSelect.innerHTML = '<option value="">Choose a student...</option>';
+                    
+                    response.data.students.forEach(student => {
+                        const option = document.createElement('option');
+                        option.value = student._id;
+                        option.textContent = `${student.name} (${student.regNo})`;
+                        studentSelect.appendChild(option);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading students:', error);
+            }
+        }
+        
+        // Handle form submission
+        document.getElementById('blackmark-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const studentId = document.getElementById('blackmark-student-select').value;
+            const severity = document.getElementById('blackmark-severity').value;
+            const reason = document.getElementById('blackmark-reason').value;
+            
+            try {
+                const response = await API.addStudentBlackmark(studentId, {
+                    severity,
+                    reason
+                });
+                
+                if (response.success) {
+                    showToast('Blackmark assigned successfully', 'success');
+                    document.getElementById('blackmark-form').reset();
+                    loadBlackmarksOverview();
+                    loadRecentBlackmarks();
+                }
+            } catch (error) {
+                showToast('Error assigning blackmark: ' + error.message, 'error');
+            }
+        });
+        
+        // Load blackmarks overview
+        async function loadBlackmarksOverview() {
+            try {
+                const response = await API.getMentorDashboard();
+                if (response.success) {
+                    const data = response.data;
+                    document.getElementById('total-blackmarks').textContent = data.alerts.blackmarks || 0;
+                    // These would need to be calculated from actual data
+                    document.getElementById('high-severity').textContent = '0';
+                    document.getElementById('medium-severity').textContent = '0';
+                    document.getElementById('low-severity').textContent = '0';
+                }
+            } catch (error) {
+                console.error('Error loading blackmarks overview:', error);
+            }
+        }
+        
+        // Load recent blackmarks
+        async function loadRecentBlackmarks() {
+            try {
+                const response = await API.getAllStudents();
+                if (response.success) {
+                    const students = response.data.students;
+                    const blackmarksList = document.getElementById('blackmarks-list');
+                    
+                    // Filter students who have blackmarks
+                    const studentsWithBlackmarks = students.filter(student => 
+                        student.blackmarks && student.blackmarks > 0
+                    );
+                    
+                    if (studentsWithBlackmarks.length === 0) {
+                        blackmarksList.innerHTML = `
+                            <div class="empty-state">
+                                <i class="fas fa-flag"></i>
+                                <h3>No blackmarks assigned</h3>
+                                <p>Assign blackmarks to students to see them here</p>
+                            </div>
+                        `;
+                        return;
+                    }
+                    
+                    // Display blackmark records
+                    blackmarksList.innerHTML = studentsWithBlackmarks.map(student => `
+                        <div class="blackmark-record-card">
+                            <div class="record-header">
+                                <h4>${student.name} (${student.regNo})</h4>
+                                <span class="blackmark-count ${student.blackmarks > 2 ? 'high' : student.blackmarks > 1 ? 'medium' : 'low'}">
+                                    ${student.blackmarks} Blackmark${student.blackmarks > 1 ? 's' : ''}
+                                </span>
+                            </div>
+                            <div class="record-details">
+                                <p>Total Blackmarks: ${student.blackmarks}</p>
+                                <p>Last updated: ${new Date().toLocaleDateString()}</p>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    document.getElementById('blackmarks-list').innerHTML = `
+                        <div class="error-message">Error loading blackmarks</div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error loading recent blackmarks:', error);
+                document.getElementById('blackmarks-list').innerHTML = `
+                    <div class="error-message">Error loading blackmarks</div>
+                `;
+            }
+        }
+        
+        // Logout function
+        function logout() {
+            localStorage.removeItem('smart_mentor_token');
+            localStorage.removeItem('smart_mentor_user');
+            showToast('Logged out successfully', 'success');
+            setTimeout(() => {
+                window.location.href = '../landing.html';
+            }, 1000);
+        }
+        
+        // Toast function
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            const icon = type === 'success' ? 'fas fa-check-circle' : 
+                        type === 'error' ? 'fas fa-exclamation-circle' : 
+                        'fas fa-info-circle';
+            
+            toast.innerHTML = `
+                <i class="${icon}"></i>
+                <span>${message}</span>
+            `;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.transform = 'translateX(0)';
+            }, 100);
+            
+            setTimeout(() => {
+                toast.style.transform = 'translateX(100%)';
+                toast.style.opacity = '0';
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        toast.parentNode.removeChild(toast);
+                    }
+                }, 300);
+            }, 5000);
+        }
+        
+        // Load data on page load
+        window.addEventListener('load', () => {
+            loadStudents();
+            loadBlackmarksOverview();
+            loadRecentBlackmarks();
+        });
+    </script>
+    
+    <style>
+        /* Modern Dashboard Layout */
+        .modern-dashboard {
+            display: flex;
+            min-height: 100vh;
+            background: #f7fafc;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background: white;
+            box-shadow: 2px 0 4px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+        
+        .sidebar-nav {
+            flex: 1;
+            padding: 1rem 0;
+        }
+        
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            color: #4a5568;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        
+        .nav-link:hover {
+            background: #f7fafc;
+            color: #667eea;
+        }
+        
+        .nav-link.active {
+            background: #667eea;
+            color: white;
+        }
+        
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .top-header {
+            background: white;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header-left h1 {
+            font-size: 1.5rem;
+            color: #2d3748;
+            margin: 0;
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #667eea;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .logout-btn {
+            background: #f56565;
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .logout-btn:hover {
+            background: #e53e3e;
+        }
+        
+        .dashboard-content-area {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+        
+        .action-section, .overview-section, .records-section, .guidelines-section {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .section-header h2 {
+            margin: 0 0 1.5rem 0;
+            color: #2d3748;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .blackmark-form .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #374151;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            resize: vertical;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .stat-card {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.5rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            border-left: 4px solid;
+        }
+        
+        .stat-card:nth-child(1) { border-left-color: #e53e3e; }
+        .stat-card:nth-child(2) { border-left-color: #ed8936; }
+        .stat-card:nth-child(3) { border-left-color: #ecc94b; }
+        .stat-card:nth-child(4) { border-left-color: #3182ce; }
+        
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+        
+        .stat-icon.red { background: #e53e3e; }
+        .stat-icon.orange { background: #ed8936; }
+        .stat-icon.yellow { background: #ecc94b; }
+        .stat-icon.blue { background: #3182ce; }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin: 0;
+        }
+        
+        .stat-label {
+            color: #718096;
+            font-size: 0.875rem;
+            margin: 0;
+        }
+        
+        .guidelines-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .guideline-card {
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid;
+        }
+        
+        .guideline-card.low {
+            background: #f0f9ff;
+            border-left-color: #3182ce;
+        }
+        
+        .guideline-card.medium {
+            background: #fffbeb;
+            border-left-color: #ecc94b;
+        }
+        
+        .guideline-card.high {
+            background: #fef2f2;
+            border-left-color: #e53e3e;
+        }
+        
+        .guideline-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+        
+        .guideline-header h3 {
+            margin: 0;
+            color: #2d3748;
+        }
+        
+        .guideline-card ul {
+            margin: 0;
+            padding-left: 1.5rem;
+        }
+        
+        .guideline-card li {
+            margin-bottom: 0.5rem;
+            color: #4a5568;
+        }
+        
+        .info-message, .error-message {
+            text-align: center;
+            padding: 2rem;
+            border-radius: 8px;
+        }
+        
+        .info-message {
+            background: #f0f9ff;
+            color: #1e40af;
+        }
+        
+        .error-message {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #718096;
+        }
+        
+        /* Hide browser breadcrumb navigation and module titles */
+        .breadcrumb, .nav-breadcrumb, [class*="breadcrumb"] {
+            display: none !important;
+        }
+        
+        /* Hide the page title that appears below header */
+        body > h1, .main-content > h1:first-child {
+            display: none !important;
+        }
+        
+        .blackmark-record-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid #e53e3e;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .record-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .record-header h4 {
+            margin: 0;
+            color: #2d3748;
+        }
+        
+        .blackmark-count {
+            font-weight: 600;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.875rem;
+        }
+        
+        .blackmark-count.low {
+            color: #3182ce;
+            background: #ebf8ff;
+        }
+        
+        .blackmark-count.medium {
+            color: #ed8936;
+            background: #fffbeb;
+        }
+        
+        .blackmark-count.high {
+            color: #e53e3e;
+            background: #fef2f2;
+        }
+        
+        .record-details {
+            color: #718096;
+            font-size: 0.875rem;
+        }
+        
+        .record-details p {
+            margin: 0.25rem 0;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #718096;
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+        
+        .empty-state h3 {
+            margin: 0 0 0.5rem 0;
+            color: #4a5568;
+        }
+        
+        .error-message {
+            text-align: center;
+            padding: 2rem;
+            color: #e53e3e;
+            background: #fef2f2;
+            border-radius: 8px;
+        }
+        
+        /* Button styles */
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #5a67d8;
+        }
+        
+        /* Hide unwanted elements */
+        body {
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+    </style>
+</body>
+</html>

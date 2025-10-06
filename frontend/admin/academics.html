@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academics Management - Smart Mentor</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="modern-dashboard">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Smart Mentor</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-link">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="students.html" class="nav-link">
+                    <i class="fas fa-users"></i>
+                    <span>Students</span>
+                </a>
+                <a href="academics.html" class="nav-link active">
+                    <i class="fas fa-book"></i>
+                    <span>Academics</span>
+                </a>
+                <a href="attendance.html" class="nav-link">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>Attendance</span>
+                </a>
+                <a href="feedback.html" class="nav-link">
+                    <i class="fas fa-comment-alt"></i>
+                    <span>Feedback</span>
+                </a>
+                <a href="messages.html" class="nav-link">
+                    <i class="fas fa-envelope"></i>
+                    <span>Messages</span>
+                </a>
+                <a href="blackmarks.html" class="nav-link">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>Blackmarks</span>
+                </a>
+                <a href="admin-management.html" class="nav-link">
+                    <i class="fas fa-user-shield"></i>
+                    <span>Admin Management</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Top Header -->
+            <header class="top-header">
+                <div class="header-left">
+                    <h1>Academics Management</h1>
+                </div>
+                <div class="header-right">
+                    <div class="user-profile">
+                        <span id="user-email">admin@smartmentor.com</span>
+                        <div class="user-avatar">
+                            <span id="user-initial">A</span>
+                        </div>
+                        <button onclick="logout()" class="logout-btn">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </button>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Academics Content -->
+            <div class="dashboard-content-area">
+                <!-- Add Marks Section -->
+                <div class="marks-entry-section">
+                    <h2>Add Subject & Marks</h2>
+                    <div class="marks-form-container">
+                        <form id="marks-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="student-select">Select Student</label>
+                                    <select id="student-select" required>
+                                        <option value="">Choose a student...</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="subject-name">Subject Name</label>
+                                    <input type="text" id="subject-name" placeholder="e.g., Mathematics" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="subject-marks">Marks (0-100)</label>
+                                    <input type="number" id="subject-marks" min="0" max="100" required>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-plus"></i>
+                                Add Subject & Marks
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                
+                <!-- Academic Overview -->
+                <div class="academic-overview">
+                    <h2>Academic Performance Overview</h2>
+                    <div class="overview-cards">
+                        <div class="overview-card">
+                            <div class="card-icon blue">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div class="card-content">
+                                <h3>Average CGPA</h3>
+                                <div class="metric">8.2</div>
+                                <small>Across all students</small>
+                            </div>
+                        </div>
+                        <div class="overview-card">
+                            <div class="card-icon green">
+                                <i class="fas fa-trophy"></i>
+                            </div>
+                            <div class="card-content">
+                                <h3>Top Performers</h3>
+                                <div class="metric">15</div>
+                                <small>CGPA above 8.5</small>
+                            </div>
+                        </div>
+                        <div class="overview-card">
+                            <div class="card-icon orange">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <div class="card-content">
+                                <h3>Need Attention</h3>
+                                <div class="metric">8</div>
+                                <small>CGPA below 6.0</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Recent Marks Entries -->
+                <div class="recent-entries">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <h2 style="margin: 0;">Recent Marks Entries</h2>
+                        <small style="color: #718096;">
+                            <i class="fas fa-clock"></i>
+                            Last updated: <span id="last-updated">Loading...</span>
+                        </small>
+                    </div>
+                    <div class="entries-table-container">
+                        <table class="entries-table">
+                            <thead>
+                                <tr>
+                                    <th>Student</th>
+                                    <th>Subject</th>
+                                    <th>Marks</th>
+                                    <th>Grade</th>
+                                    <th>Date Added</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>AHAMED NASEER N</td>
+                                    <td>Mathematics</td>
+                                    <td>85</td>
+                                    <td><span class="grade-badge good">A</span></td>
+                                    <td>Today</td>
+                                    <td>
+                                        <button class="btn-action edit" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn-action delete" title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>STUDENT TWO</td>
+                                    <td>Physics</td>
+                                    <td>78</td>
+                                    <td><span class="grade-badge average">B+</span></td>
+                                    <td>Yesterday</td>
+                                    <td>
+                                        <button class="btn-action edit" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn-action delete" title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/api.js"></script>
+    <script>
+        // Check authentication
+        const token = localStorage.getItem('smart_mentor_token');
+        const user = localStorage.getItem('smart_mentor_user');
+        
+        if (!token || !user) {
+            window.location.href = '../landing.html';
+        }
+        
+        const currentUser = JSON.parse(user);
+        
+        // Check if user is admin or mentor
+        if (currentUser.role !== 'admin' && currentUser.role !== 'mentor') {
+            window.location.href = '../landing.html';
+        }
+        
+        // Update user info
+        document.getElementById('user-email').textContent = currentUser.email;
+        document.getElementById('user-initial').textContent = currentUser.email.charAt(0).toUpperCase();
+        
+        // Load students for dropdown
+        async function loadStudents() {
+            try {
+                const response = await API.getAllStudentsUnpaginated();
+                if (response.success) {
+                    const studentSelect = document.getElementById('student-select');
+                    studentSelect.innerHTML = '<option value="">Choose a student...</option>';
+                    
+                    console.log('Students loaded:', response.data.students); // Debug log
+                    
+                    if (response.data.students && response.data.students.length > 0) {
+                        response.data.students.forEach(student => {
+                            const option = document.createElement('option');
+                            option.value = student._id;
+                            // Use the correct property names from the API response
+                            const name = student.name || `Student ${student._id.slice(-4)}`;
+                            const regNo = student.regNo || 'No Reg';
+                            option.textContent = `${name} (${regNo})`;
+                            studentSelect.appendChild(option);
+                        });
+                        
+                        console.log('Student dropdown populated with', response.data.students.length, 'students');
+                        showToast(`Loaded ${response.data.students.length} students`, 'success');
+                    } else {
+                        console.log('No students found in response');
+                        studentSelect.innerHTML = '<option value="">No students found</option>';
+                        showToast('No students found. Please register some students first.', 'warning');
+                    }
+                } else {
+                    console.error('Failed to load students:', response.message);
+                    showToast('Failed to load students: ' + (response.message || 'Unknown error'), 'error');
+                }
+            } catch (error) {
+                console.error('Error loading students:', error);
+                showToast('Error loading students: ' + error.message, 'error');
+            }
+        }
+        
+        // Handle marks form submission
+        document.getElementById('marks-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const studentId = document.getElementById('student-select').value;
+            const subjectName = document.getElementById('subject-name').value;
+            const marks = parseFloat(document.getElementById('subject-marks').value);
+            
+            if (!studentId || !subjectName || isNaN(marks)) {
+                showToast('Please fill all fields correctly', 'warning');
+                return;
+            }
+            
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
+            
+            try {
+                console.log('Adding marks:', { studentId, subjectName, marks });
+                const response = await API.addSubject({
+                    studentId,
+                    subjectName,
+                    marks
+                });
+                
+                console.log('Add marks response:', response);
+                
+                if (response.success) {
+                    showToast(`✅ Marks added successfully for ${subjectName}! Student will see this update within 10 seconds.`, 'success');
+                    e.target.reset();
+                    
+                    // Immediate refresh of all data
+                    console.log('🔄 Immediately refreshing all data after marks addition...');
+                    loadRecentEntries(); // Refresh the entries table
+                    loadAcademicOverview(); // Refresh the overview stats
+                    
+                    // Also refresh after a short delay to ensure data is fully saved
+                    setTimeout(() => {
+                        console.log('🔄 Secondary refresh to ensure data consistency...');
+                        loadRecentEntries();
+                        loadAcademicOverview();
+                    }, 2000);
+                } else {
+                    console.error('Failed to add marks:', response);
+                    showToast('Error adding marks: ' + (response.message || 'Unknown error'), 'error');
+                }
+            } catch (error) {
+                console.error('Error adding marks:', error);
+                showToast('Error adding marks: ' + error.message, 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-plus"></i> Add Subject & Marks';
+            }
+        });
+        
+        // Load academic overview
+        async function loadAcademicOverview() {
+            try {
+                const response = await API.getAcademicOverview();
+                if (response.success) {
+                    const data = response.data;
+                    document.querySelector('.overview-card:nth-child(1) .metric').textContent = data.averageCGPA || '0.0';
+                    document.querySelector('.overview-card:nth-child(2) .metric').textContent = data.highPerformers || '0';
+                    document.querySelector('.overview-card:nth-child(3) .metric').textContent = data.lowPerformers || '0';
+                }
+            } catch (error) {
+                console.error('Error loading academic overview:', error);
+            }
+        }
+        
+        // Load recent entries
+        async function loadRecentEntries() {
+            try {
+                // Get all students with their academic data
+                const allEntries = [];
+                const studentsResponse = await API.getMentorStudents();
+                
+                if (studentsResponse.success) {
+                    const students = studentsResponse.data.students;
+                    
+                    // For each student, get their detailed academic data
+                    for (const student of students) {
+                        try {
+                            const academicResponse = await API.getStudentAcademics(student._id);
+                            if (academicResponse.success && academicResponse.data.academics.subjects) {
+                                academicResponse.data.academics.subjects.forEach(subject => {
+                                    allEntries.push({
+                                        studentId: student._id,
+                                        studentName: academicResponse.data.studentInfo?.name || student.name || 'Unknown Student',
+                                        subjectId: subject._id,
+                                        subjectName: subject.name,
+                                        marks: subject.marks,
+                                        addedAt: subject.addedAt || new Date(),
+                                        grade: getGrade(subject.marks)
+                                    });
+                                });
+                            }
+                        } catch (error) {
+                            console.error(`Error loading academics for student ${student._id}:`, error);
+                        }
+                    }
+                }
+                
+                const entriesTableBody = document.querySelector('.entries-table tbody');
+                    
+                // Sort by date (most recent first)
+                allEntries.sort((a, b) => new Date(b.addedAt) - new Date(a.addedAt));
+                
+                // Display entries
+                if (allEntries.length === 0) {
+                    entriesTableBody.innerHTML = `
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 2rem; color: #718096;">
+                                <i class="fas fa-book-open" style="font-size: 2rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                                <br>No marks entries found. Add some marks to see them here.
+                            </td>
+                        </tr>
+                    `;
+                } else {
+                    entriesTableBody.innerHTML = allEntries.slice(0, 10).map(entry => `
+                        <tr>
+                            <td>${entry.studentName}</td>
+                            <td>${entry.subjectName}</td>
+                            <td>${entry.marks}</td>
+                            <td><span class="grade-badge ${entry.grade.class}">${entry.grade.letter}</span></td>
+                            <td>${formatDate(entry.addedAt)}</td>
+                            <td>
+                                <button class="btn-action edit" onclick="editEntry('${entry.studentId}', '${entry.subjectId}')" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-action delete" onclick="deleteEntry('${entry.studentId}', '${entry.subjectId}', '${entry.subjectName}')" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `).join('');
+                }
+                
+                // Update last updated timestamp
+                const lastUpdatedElement = document.getElementById('last-updated');
+                if (lastUpdatedElement) {
+                    lastUpdatedElement.textContent = new Date().toLocaleTimeString();
+                }
+            } catch (error) {
+                console.error('Error loading recent entries:', error);
+                const lastUpdatedElement = document.getElementById('last-updated');
+                if (lastUpdatedElement) {
+                    lastUpdatedElement.textContent = 'Error loading';
+                }
+            }
+        }
+        
+        // Get grade based on marks
+        function getGrade(marks) {
+            if (marks >= 90) return { letter: 'A+', class: 'excellent' };
+            if (marks >= 80) return { letter: 'A', class: 'good' };
+            if (marks >= 70) return { letter: 'B+', class: 'good' };
+            if (marks >= 60) return { letter: 'B', class: 'average' };
+            if (marks >= 50) return { letter: 'C', class: 'average' };
+            if (marks >= 40) return { letter: 'D', class: 'poor' };
+            return { letter: 'F', class: 'poor' };
+        }
+        
+        // Format date
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diffTime = now - date; // Remove Math.abs to get proper direction
+            const diffMinutes = Math.floor(diffTime / (1000 * 60));
+            const diffHours = Math.floor(diffTime / (1000 * 60 * 60));
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+            
+            // Handle future dates (shouldn't happen, but just in case)
+            if (diffTime < 0) return 'Just now';
+            
+            // Less than 1 minute
+            if (diffMinutes < 1) return 'Just now';
+            
+            // Less than 1 hour
+            if (diffMinutes < 60) return `${diffMinutes} minute${diffMinutes === 1 ? '' : 's'} ago`;
+            
+            // Less than 24 hours
+            if (diffHours < 24) return `${diffHours} hour${diffHours === 1 ? '' : 's'} ago`;
+            
+            // 1 day
+            if (diffDays === 1) return 'Yesterday';
+            
+            // Less than 7 days
+            if (diffDays < 7) return `${diffDays} days ago`;
+            
+            // More than 7 days, show actual date
+            return date.toLocaleDateString();
+        }
+        
+        // Edit entry function
+        function editEntry(studentId, subjectId) {
+            // For now, show a simple prompt - in a real app, you'd use a modal
+            const newMarks = prompt('Enter new marks (0-100):');
+            if (newMarks !== null && !isNaN(newMarks) && newMarks >= 0 && newMarks <= 100) {
+                updateSubjectMarks(studentId, subjectId, parseFloat(newMarks));
+            }
+        }
+        
+        // Delete entry function
+        async function deleteEntry(studentId, subjectId, subjectName) {
+            if (confirm(`Are you sure you want to delete ${subjectName} marks?`)) {
+                try {
+                    const response = await API.removeSubject(studentId, subjectId);
+                    if (response.success) {
+                        showToast('Subject deleted successfully', 'success');
+                        loadRecentEntries();
+                        loadAcademicOverview();
+                    } else {
+                        showToast('Error deleting subject', 'error');
+                    }
+                } catch (error) {
+                    showToast('Error deleting subject: ' + error.message, 'error');
+                }
+            }
+        }
+        
+        // Update subject marks
+        async function updateSubjectMarks(studentId, subjectId, newMarks) {
+            try {
+                // Get current subject name first
+                const studentResponse = await API.getStudentAcademics(studentId);
+                if (studentResponse.success) {
+                    const subject = studentResponse.data.academics.subjects.find(s => s._id === subjectId);
+                    if (subject) {
+                        const response = await API.addSubject({
+                            studentId,
+                            subjectName: subject.name,
+                            marks: newMarks
+                        });
+                        
+                        if (response.success) {
+                            showToast('Marks updated successfully', 'success');
+                            loadRecentEntries();
+                            loadAcademicOverview();
+                        } else {
+                            showToast('Error updating marks', 'error');
+                        }
+                    }
+                }
+            } catch (error) {
+                showToast('Error updating marks: ' + error.message, 'error');
+            }
+        }
+        
+        // Test API connection
+        async function testAPI() {
+            try {
+                console.log('Testing API connection...');
+                const token = localStorage.getItem('smart_mentor_token');
+                console.log('Token exists:', !!token);
+                
+                if (!token) {
+                    showToast('No authentication token found. Please login again.', 'error');
+                    setTimeout(() => {
+                        window.location.href = '../landing.html';
+                    }, 2000);
+                    return;
+                }
+                
+                const response = await API.getMentorStudents();
+                console.log('API Response:', response);
+                
+                if (!response.success) {
+                    showToast('API Error: ' + (response.message || 'Unknown error'), 'error');
+                }
+            } catch (error) {
+                console.error('API Test Error:', error);
+                showToast('Connection Error: ' + error.message, 'error');
+            }
+        }
+        
+        // Auto-refresh recent entries every 10 seconds for real-time updates
+        function startAutoRefresh() {
+            setInterval(() => {
+                console.log('Auto-refreshing recent entries...');
+                loadRecentEntries();
+                loadAcademicOverview();
+            }, 10000); // 10 seconds for faster updates
+        }
+        
+        // Load data on page load
+        window.addEventListener('load', () => {
+            testAPI(); // Test API first
+            loadStudents();
+            loadAcademicOverview();
+            loadRecentEntries();
+            startAutoRefresh(); // Start auto-refresh
+        });
+        
+        // Logout function
+        function logout() {
+            localStorage.removeItem('smart_mentor_token');
+            localStorage.removeItem('smart_mentor_user');
+            showToast('Logged out successfully', 'success');
+            setTimeout(() => {
+                window.location.href = '../landing.html?from_logout=true';
+            }, 1000);
+        }
+        
+        // Toast function
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            const icon = type === 'success' ? 'fas fa-check-circle' : 
+                        type === 'error' ? 'fas fa-exclamation-circle' : 
+                        'fas fa-info-circle';
+            
+            toast.innerHTML = `
+                <i class="${icon}"></i>
+                <span>${message}</span>
+            `;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.transform = 'translateX(0)';
+            }, 100);
+            
+            setTimeout(() => {
+                toast.style.transform = 'translateX(100%)';
+                toast.style.opacity = '0';
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        toast.parentNode.removeChild(toast);
+                    }
+                }, 300);
+            }, 5000);
+        }
+        
+        // Load students when page loads
+        window.addEventListener('load', () => {
+            loadStudents();
+        });
+        
+        // Logout function
+        function logout() {
+            localStorage.removeItem('smart_mentor_token');
+            localStorage.removeItem('smart_mentor_user');
+            showToast('Logged out successfully', 'success');
+            setTimeout(() => {
+                window.location.href = '../landing.html';
+            }, 1000);
+        }
+    </script>
+    
+    <style>
+        /* Include modern dashboard styles */
+        .modern-dashboard { display: flex; min-height: 100vh; background: #f8fafc; }
+        .sidebar { width: 250px; background: #2d3748; color: white; position: fixed; height: 100vh; overflow-y: auto; }
+        .sidebar-header { padding: 1.5rem; border-bottom: 1px solid #4a5568; }
+        .logo { display: flex; align-items: center; gap: 0.75rem; font-size: 1.25rem; font-weight: 700; }
+        .logo i { color: #667eea; font-size: 1.5rem; }
+        .sidebar-nav { padding: 1rem 0; }
+        .nav-link { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1.5rem; color: #cbd5e0; text-decoration: none; transition: all 0.2s; }
+        .nav-link:hover { background: #4a5568; color: white; }
+        .nav-link.active { background: #667eea; color: white; }
+        .main-content { margin-left: 250px; flex: 1; display: flex; flex-direction: column; }
+        .top-header { background: white; padding: 1rem 2rem; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; }
+        .header-left h1 { font-size: 1.5rem; font-weight: 600; color: #2d3748; margin: 0; }
+        .user-profile { display: flex; align-items: center; gap: 1rem; }
+        .user-avatar { width: 40px; height: 40px; background: #667eea; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; }
+        .dashboard-content-area { padding: 2rem; flex: 1; }
+        .logout-btn { background: #e53e3e; color: white; border: none; padding: 0.5rem; border-radius: 8px; cursor: pointer; transition: background 0.2s; }
+        .logout-btn:hover { background: #c53030; }
+        
+        .marks-entry-section, .academic-overview, .recent-entries {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .marks-entry-section h2, .academic-overview h2, .recent-entries h2 {
+            margin: 0 0 1.5rem 0;
+            color: #2d3748;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #4a5568;
+        }
+        
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 0.875rem;
+        }
+        
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #5a67d8;
+        }
+        
+        .overview-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .overview-card {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.5rem;
+            background: #f7fafc;
+            border-radius: 12px;
+        }
+        
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+        
+        .card-icon.blue { background: #3182ce; }
+        .card-icon.green { background: #38a169; }
+        .card-icon.orange { background: #ed8936; }
+        
+        .card-content h3 {
+            margin: 0 0 0.5rem 0;
+            color: #2d3748;
+            font-size: 1rem;
+        }
+        
+        .metric {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin: 0 0 0.25rem 0;
+        }
+        
+        .card-content small {
+            color: #718096;
+        }
+        
+        .entries-table-container {
+            overflow-x: auto;
+        }
+        
+        .entries-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .entries-table th {
+            background: #f7fafc;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: #2d3748;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .entries-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .entries-table tr:hover {
+            background: #f7fafc;
+        }
+        
+        .grade-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .grade-badge.good {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+        
+        .grade-badge.average {
+            background: #faf089;
+            color: #744210;
+        }
+        
+        .btn-action {
+            width: 32px;
+            height: 32px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.5rem;
+            transition: all 0.2s;
+        }
+        
+        .btn-action.edit {
+            background: #faf089;
+            color: #744210;
+        }
+        
+        .btn-action.delete {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+        
+        .btn-action:hover {
+            transform: scale(1.1);
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); }
+            .main-content { margin-left: 0; }
+            .form-row { grid-template-columns: 1fr; }
+            .overview-cards { grid-template-columns: 1fr; }
+        }
+        
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        
+        .toast {
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transform: translateX(100%);
+            transition: all 0.3s ease;
+        }
+        
+        .toast.success { border-left: 4px solid #38a169; }
+        .toast.error { border-left: 4px solid #e53e3e; }
+        .toast.warning { border-left: 4px solid #ed8936; }
+        .toast.info { border-left: 4px solid #3182ce; }
+        
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: #718096;
+        }
+        
+        .empty-state i {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+        
+        /* Hide browser breadcrumb navigation */
+        .breadcrumb, .nav-breadcrumb, [class*="breadcrumb"] {
+            display: none !important;
+        }
+        
+        /* Grade badges */
+        .grade-badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .grade-badge.excellent {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+        
+        .grade-badge.good {
+            background: #bee3f8;
+            color: #2a4365;
+        }
+        
+        .grade-badge.average {
+            background: #faf089;
+            color: #744210;
+        }
+        
+        .grade-badge.poor {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+        
+        /* Action buttons */
+        .btn-action {
+            background: none;
+            border: none;
+            padding: 0.5rem;
+            margin: 0 0.25rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-action.edit {
+            color: #667eea;
+        }
+        
+        .btn-action.edit:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-action.delete {
+            color: #e53e3e;
+        }
+        
+        .btn-action.delete:hover {
+            background: #e53e3e;
+            color: white;
+        }
+        
+        /* Table styling */
+        .entries-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        
+        .entries-table th,
+        .entries-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .entries-table th {
+            background: #f7fafc;
+            font-weight: 600;
+            color: #2d3748;
+        }
+    </style>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container" class="toast-container"></div>
+
+</body>
+</html>
