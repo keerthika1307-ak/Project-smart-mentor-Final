@@ -171,16 +171,6 @@ Hosting (AWS EC2 / Render / Vercel)
 
 ---
 
-## 📷 Screenshots (Add later)
-
-* Login page
-* Mentor dashboard
-* Mentee profile view
-* AI feedback panel
-* Credit tracker dashboard
-
----
-
 ## 📜 License
 
 This project is developed for academic and learning purposes.
